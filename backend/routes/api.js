@@ -7,9 +7,11 @@ const router = express.Router();
 
 function dismissProtectedFields(user) {
   return {
-    _id: user._id,
-    firstName: user.firstName,
-    lastName: user.lastName,
+
+    id: user.id,
+    firstName: user.first_name,
+    lastName: user.last_name,
+    fullName: user.full_name,
     photo: user.photo,
     email: user.email,
     group: user.group,
@@ -19,8 +21,8 @@ function dismissProtectedFields(user) {
 router.post('/registration', async (req, res, next) => {
   console.log('registering user');
   const { username, password } = req.body;
-  const newUser = new User({ username });
-  User.register(newUser, password, (e) => {
+  // const newUser =  User.create({ username });
+  User.register(username, password, (e) => {
     if (e) {
       res.status(409);
       res.send('false');
@@ -33,9 +35,8 @@ router.post('/registration', async (req, res, next) => {
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
   console.log(`User ${req.user.username} loged in`);
-  const user = { ...req.user._doc, hash: '', salt: '' };
-  console.log(user);
-  res.json(user);
+
+  res.json(dismissProtectedFields(req.user));
 });
 
 router.get('/logged', auth, async (req, res) => {

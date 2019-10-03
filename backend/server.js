@@ -15,6 +15,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
+const sequelize = require('./models/sequelize');
 const serializeUser = require('./routes/serealize.js');
 const deserializeUser = require('./routes/deserialize.js');
 // const afterGoogleAth = require('././routes/goggleStrategy');
@@ -65,26 +66,45 @@ passport.use(
       scope: ['profile', 'email'],
     },
     (accessToken, refreshToken, profile, done) => {
-      User.findOrCreate(profile, accessToken, refreshToken, (err, user) => done(err, user));
+      // User.findOrCreate(profile, accessToken, refreshToken, (err, user) => done(err, user));
+      User.findOrCreate({
+        defaults: {
+          first_name: profile.name.givenName,
+          last_name: profile.name.familyName,
+          photo: profile.photos[0].value,
+        },
+        where: { username: profile.emails[0].value },
+      }).then(([user]) => {
+        const err = '';
+        done(err, user);
+      });
     },
   ),
 );
-passport.use(new LocalStrategy(User.authenticate()));
-
+passport.use(User.createStrategy());
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect('http://localhost:8080');
+  res.redirect('/');
 });
 passport.serializeUser(serializeUser);
 
 // used to deserialize the user
 passport.deserializeUser(deserializeUser);
-db.connect(
-  `mongodb+srv://${process.env.dbUser}:${process.env.dbPassword}@cluster0-ser1y.mongodb.net/familyhub?retryWrites=true&w=majority`,
-  {
-    useNewUrlParser: true,
-  },
-);
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+    User.sync({ force: true }).then(() => User.create({ first_name: 'John', last_name: 'Hancock' }));
+  })
+  .catch((err) => {
+    console.error('Unable to connect to the database:', err);
+  });
+// db.connect(
+//   `mongodb+srv://${process.env.dbUser}:${process.env.dbPassword}@cluster0-ser1y.mongodb.net/familyhub?retryWrites=true&w=majority`,
+//   {
+//     useNewUrlParser: true,
+//   },
+// );
 app.use('/api', apiRouter);
 app.listen(3000, () => {
   console.log('Server is running on port 3000!');
