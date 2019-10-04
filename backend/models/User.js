@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const passportLocalSequelize = require('passport-local-sequelize');
-const sequelize = require('./sequelize');
+const sequelize = require('../dbSettings/sequelize');
+const Сoordinates = require('./Сoordinates');
 
 const User = sequelize.define('user', {
   username: {
@@ -37,6 +38,7 @@ passportLocalSequelize.attachToUser(User, {
   hashField: 'hash',
   saltField: 'salt',
 });
+User.hasMany(Сoordinates);
 
 // const db = require('mongoose');
 // const passportLocalMongoose = require('passport-local-mongoose');

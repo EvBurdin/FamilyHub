@@ -12,13 +12,12 @@ require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const LocalStrategy = require('passport-local').Strategy;
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const sequelize = require('./models/sequelize');
+const sequelize = require('./dbSettings/sequelize');
 const serializeUser = require('./routes/serealize.js');
 const deserializeUser = require('./routes/deserialize.js');
-// const afterGoogleAth = require('././routes/goggleStrategy');
+const forceSchemaUpdate = require('./seeders/forceSchemaUpdate');
 require('pretty-error').start();
 
 const app = express();
@@ -94,17 +93,12 @@ sequelize
   .authenticate()
   .then(() => {
     console.log('Connection has been established successfully.');
-    User.sync({ force: true }).then(() => User.create({ first_name: 'John', last_name: 'Hancock' }));
+    forceSchemaUpdate();
   })
   .catch((err) => {
     console.error('Unable to connect to the database:', err);
   });
-// db.connect(
-//   `mongodb+srv://${process.env.dbUser}:${process.env.dbPassword}@cluster0-ser1y.mongodb.net/familyhub?retryWrites=true&w=majority`,
-//   {
-//     useNewUrlParser: true,
-//   },
-// );
+
 app.use('/api', apiRouter);
 app.listen(3000, () => {
   console.log('Server is running on port 3000!');

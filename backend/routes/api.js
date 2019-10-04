@@ -2,12 +2,12 @@ const passport = require('passport');
 const express = require('express');
 const auth = require('./auth');
 const User = require('../models/User');
+const Coordinates = require('../models/Сoordinates');
 
 const router = express.Router();
 
 function dismissProtectedFields(user) {
   return {
-
     id: user.id,
     firstName: user.first_name,
     lastName: user.last_name,
@@ -45,6 +45,29 @@ router.get('/logged', auth, async (req, res) => {
 
   res.json(dismissProtectedFields(req.user));
 });
+
+router
+  .route('/coordinates')
+  .get(auth, async (req, res) => {
+    res.json(await req.user.getCoordinates({ limit: 1, order: [['timestamp', 'DESC']] }));
+  })
+  .post(auth, async (req, res) => {
+    const {
+ accuracy, altitude, heading, latitude, longitude, timestamp, speed 
+} = req.body;
+    const { id: userId } = req.user;
+    Coordinates.create({
+      accuracy,
+      altitude,
+      heading,
+      latitude,
+      longitude,
+      speed,
+      timestamp: new Date(+timestamp),
+      userId,
+    });
+    res.json('Success');
+  });
 
 // строчка чтоб обновить токены
 // { accessType: 'offline', prompt: 'consent' }
