@@ -83,7 +83,7 @@ passport.use(
 passport.use(User.createStrategy());
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect('/');
+  res.redirect('exp://ik-by5.yok558.familyhub.exp.direct:80/--/expo-auth-session');
 });
 passport.serializeUser(serializeUser);
 

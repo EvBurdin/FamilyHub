@@ -41,6 +41,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 
 router.get('/logged', auth, async (req, res) => {
   console.log(req.user);
+  console.log(req.cookies)
   console.log(dismissProtectedFields(req.user));
 
   res.json(dismissProtectedFields(req.user));
