@@ -58,9 +58,8 @@ passport.use(
     {
       clientID: process.env.clientId,
       clientSecret: process.env.clientSecret,
-      callbackURL: 'http://localhost:3000/auth/google/callback',
-      realm: 'http://localhost:3000',
-
+      callbackURL: 'http://134.209.82.36.nip.io:3000/auth/google/callback',
+      realm: 'http://134.209.82.36.nip.io:3000',
       scope: ['profile', 'email'],
     },
     (accessToken, refreshToken, profile, done) => {
