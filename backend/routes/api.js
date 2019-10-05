@@ -2,7 +2,7 @@ const passport = require('passport');
 const express = require('express');
 const auth = require('./auth');
 
-const { User, Coordinates } = require('../models/Index');
+const { User, Coordinate } = require('../models/Index');
 
 const router = express.Router();
 
