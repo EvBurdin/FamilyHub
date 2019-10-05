@@ -1,7 +1,6 @@
 // require('./workers/Worker.js');
 const express = require('express');
 const redis = require('redis');
-const db = require('mongoose');
 const morgan = require('morgan');
 const path = require('path');
 const session = require('express-session');
@@ -14,14 +13,14 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const sequelize = require('./dbSettings/sequelize');
+const db = require('./models/Index');
+// const sequelize = require('./dbSettings/sequelize');
 const serializeUser = require('./routes/serealize.js');
 const deserializeUser = require('./routes/deserialize.js');
 const forceSchemaUpdate = require('./seeders/forceSchemaUpdate');
 require('pretty-error').start();
 
 const app = express();
-const User = require('./models/User');
 const apiRouter = require('./routes/api');
 
 app.use(
@@ -66,7 +65,7 @@ passport.use(
     },
     (accessToken, refreshToken, profile, done) => {
       // User.findOrCreate(profile, accessToken, refreshToken, (err, user) => done(err, user));
-      User.findOrCreate({
+      db.User.findOrCreate({
         defaults: {
           first_name: profile.name.givenName,
           last_name: profile.name.familyName,
@@ -80,7 +79,7 @@ passport.use(
     },
   ),
 );
-passport.use(User.createStrategy());
+passport.use(db.User.createStrategy());
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
   res.redirect('exp://ik-by5.yok558.familyhub.exp.direct:80/--/expo-auth-session');
@@ -89,11 +88,11 @@ passport.serializeUser(serializeUser);
 
 // used to deserialize the user
 passport.deserializeUser(deserializeUser);
-sequelize
+db.sequelize
   .authenticate()
   .then(() => {
     console.log('Connection has been established successfully.');
-    forceSchemaUpdate();
+    forceSchemaUpdate(db);
   })
   .catch((err) => {
     console.error('Unable to connect to the database:', err);

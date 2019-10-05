@@ -1,50 +1,51 @@
-const Sequelize = require('sequelize');
 const passportLocalSequelize = require('passport-local-sequelize');
-const sequelize = require('../dbSettings/sequelize');
-const Сoordinates = require('./Сoordinates');
-const Family = require('./Family');
 
-const User = sequelize.define('user', {
-  username: {
-    type: Sequelize.STRING,
-  },
-  hash: {
-    type: Sequelize.STRING(1234),
-  },
-  salt: {
-    type: Sequelize.STRING,
-  },
-  first_name: {
-    type: Sequelize.STRING,
-  },
-  last_name: {
-    type: Sequelize.STRING,
-  },
-  full_name: {
-    type: Sequelize.VIRTUAL,
-    get() {
-      return `${this.getDataValue('first_name')} ${this.getDataValue('last_name')}`;
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    username: {
+      type: DataTypes.STRING,
     },
-  },
-  photo: {
-    type: Sequelize.STRING,
-  },
-  family: {
-    type: Sequelize.STRING,
-  },
-});
+    hash: {
+      type: DataTypes.STRING(1234),
+    },
+    salt: {
+      type: DataTypes.STRING,
+    },
+    first_name: {
+      type: DataTypes.STRING,
+    },
+    last_name: {
+      type: DataTypes.STRING,
+    },
+    full_name: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.getDataValue('first_name')} ${this.getDataValue('last_name')}`;
+      },
+    },
+    photo: {
+      type: DataTypes.STRING,
+    },
+    family: {
+      type: DataTypes.STRING,
+    },
+  });
 
-passportLocalSequelize.attachToUser(User, {
-  usernameField: 'username',
-  hashField: 'hash',
-  saltField: 'salt',
-});
-User.hasMany(Сoordinates);
-// User.belongsToMany(Family, {
-//   through: 'userFamilys',
-//   as: 'groups',
-//   foreignKey: 'userId',
-// });
+  passportLocalSequelize.attachToUser(User, {
+    usernameField: 'username',
+    hashField: 'hash',
+    saltField: 'salt',
+  });
+  User.associate = models => {
+    User.hasMany(models.Coordinate);
+    User.belongsToMany(models.Family, {
+      through: 'UsersFamily',
+      as: 'groups',
+      foreignKey: 'userId',
+    });
+  };
+  return User;
+};
 
 // const db = require('mongoose');
 // const passportLocalMongoose = require('passport-local-mongoose');
@@ -80,4 +81,3 @@ User.hasMany(Сoordinates);
 //   cb(err, user);
 // };
 // UserSchema.plugin(passportLocalMongoose);
-module.exports = User;

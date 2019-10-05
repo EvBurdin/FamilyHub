@@ -1,16 +1,15 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../dbSettings/sequelize');
-const User = require('./User');
-
-const Family = sequelize.define('family', {
-  family_name: {
-    type: Sequelize.STRING,
-  },
-});
-// Family.belongsToMany(User, {
-//   through: 'userFamilys',
-//   as: 'users',
-//   foreignKey: 'familyId',
-// });
-
-module.exports = Family;
+module.exports = (sequelize, DataTypes) => {
+  const Family = sequelize.define('Family', {
+    family_name: {
+      type: DataTypes.STRING,
+    },
+  });
+  Family.associate = (models) => {
+    Family.belongsToMany(models.User, {
+      through: 'UsersFamily',
+      as: 'users',
+      foreignKey: 'familyId',
+    });
+  };
+  return Family;
+};

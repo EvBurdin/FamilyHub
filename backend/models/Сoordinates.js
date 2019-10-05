@@ -1,29 +1,27 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../dbSettings/sequelize');
+module.exports = (sequelize, DataTypes) => {
+  const Сoordinate = sequelize.define('Coordinate', {
+    accuracy: {
+      type: DataTypes.DECIMAL,
+    },
+    altitude: {
+      type: DataTypes.DECIMAL,
+    },
+    heading: {
+      type: DataTypes.DECIMAL,
+    },
+    latitude: {
+      type: DataTypes.DECIMAL,
+    },
+    longitude: {
+      type: DataTypes.STRING,
+    },
+    speed: {
+      type: DataTypes.DECIMAL(10, 2),
+    },
 
-const Сoordinates = sequelize.define('coordinate', {
-  accuracy: {
-    type: Sequelize.DECIMAL,
-  },
-  altitude: {
-    type: Sequelize.DECIMAL,
-  },
-  heading: {
-    type: Sequelize.DECIMAL,
-  },
-  latitude: {
-    type: Sequelize.DECIMAL,
-  },
-  longitude: {
-    type: Sequelize.STRING,
-  },
-  speed: {
-    type: Sequelize.DECIMAL(10, 2),
-  },
-
-  timestamp: {
-    type: Sequelize.DATE,
-  },
-});
-
-module.exports = Сoordinates;
+    timestamp: {
+      type: DataTypes.DATE,
+    },
+  });
+  return Сoordinate;
+};

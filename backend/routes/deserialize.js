@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const { User } = require('../models/Index');
 
 async function deserialize(id, done) {
   const user = await User.findOne({

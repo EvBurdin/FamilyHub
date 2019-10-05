@@ -1,7 +1,8 @@
 const passport = require('passport');
 const express = require('express');
 const auth = require('./auth');
-const User = require('../models/User');
+
+const { User } = require('../models/Index');
 const Coordinates = require('../models/Сoordinates');
 
 const router = express.Router();
@@ -41,7 +42,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 
 router.get('/logged', auth, async (req, res) => {
   console.log(req.user);
-  console.log(req.cookies)
+  console.log(req.cookies);
   console.log(dismissProtectedFields(req.user));
 
   res.json(dismissProtectedFields(req.user));
