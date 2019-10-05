@@ -1,7 +1,8 @@
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
+import { connect } from 'react-redux';
 
-export default class showMap extends React.Component {
+class showMap extends React.Component {
   render() {
     return (
       <MapView
@@ -12,16 +13,32 @@ export default class showMap extends React.Component {
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
-      >
-        <Marker
-          coordinate={{
-            latitude: 55.708906,
-            longitude: 37.5926676,
-          }}
-          title="title"
-          description="description"
-        />
-      </MapView>
+       />
     );
   }
 }
+function mapStateToProps(store) {
+  return {
+    myLocation: store.map.selfGPSLocation,
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {};
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(showMap);
+
+// {
+//   this.props.myLocation &&
+//   <Marker
+//     coordinate={{
+//       latitude: 55.708906,
+//       longitude: 37.5926676,
+//     }}
+//     title="title"
+//     description="description"
+//   />
+// }
