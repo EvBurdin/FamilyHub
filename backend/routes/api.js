@@ -56,7 +56,8 @@ router
     const {
  accuracy, altitude, heading, latitude, longitude, timestamp, speed 
 } = req.body;
-    const { id: userId } = req.user;
+    const { id: UserId } = req.user;
+
     Coordinate.create({
       accuracy,
       altitude,
@@ -65,7 +66,7 @@ router
       longitude,
       speed,
       timestamp: new Date(+timestamp),
-      userId,
+      UserId,
     });
     res.json('Success');
   });
