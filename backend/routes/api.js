@@ -57,7 +57,7 @@ router
  accuracy, altitude, heading, latitude, longitude, timestamp, speed 
 } = req.body;
     const { id: userId } = req.user;
-    Coordinates.create({
+    Coordinate.create({
       accuracy,
       altitude,
       heading,
