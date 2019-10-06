@@ -1,46 +1,55 @@
 const passportLocalSequelize = require('passport-local-sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
-    username: {
-      type: DataTypes.STRING,
-    },
-    hash: {
-      type: DataTypes.STRING(1234),
-    },
-    salt: {
-      type: DataTypes.STRING,
-    },
-    first_name: {
-      type: DataTypes.STRING,
-    },
-    last_name: {
-      type: DataTypes.STRING,
-    },
-    full_name: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        return `${this.getDataValue('first_name')} ${this.getDataValue('last_name')}`;
+  const User = sequelize.define(
+    'User',
+    {
+      username: {
+        type: DataTypes.STRING,
+      },
+      hash: {
+        type: DataTypes.STRING(1234),
+      },
+      salt: {
+        type: DataTypes.STRING,
+      },
+      firstName: {
+        type: DataTypes.STRING,
+      },
+      lastName: {
+        type: DataTypes.STRING,
+      },
+      fullName: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return `${this.getDataValue('first_name')} ${this.getDataValue('last_name')}`;
+        },
+      },
+      photo: {
+        type: DataTypes.STRING,
+      },
+      family: {
+        type: DataTypes.STRING,
       },
     },
-    photo: {
-      type: DataTypes.STRING,
+    {
+      defaultScope: {
+        attributes: { exclude: ['hash', 'salt', 'createdAt', 'updatedAt'] },
+      },
     },
-    family: {
-      type: DataTypes.STRING,
-    },
-  });
+  );
 
   passportLocalSequelize.attachToUser(User, {
     usernameField: 'username',
     hashField: 'hash',
     saltField: 'salt',
   });
-  User.associate = models => {
+  User.associate = (models) => {
     User.hasMany(models.Coordinate);
+    User.hasMany(models.Todo, { foreignKey: 'author' });
     User.belongsToMany(models.Family, {
       through: 'UsersFamily',
-      as: 'groups',
+      as: 'Familys',
       foreignKey: 'userId',
     });
   };
