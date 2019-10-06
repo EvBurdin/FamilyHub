@@ -1,14 +1,20 @@
-import React from "./node_modules/react";
+import React from "react";
 import { View, Text } from "react-native";
-import { CalendarList } from './node_modules/react-native-calendars';
-import Dialog from "./node_modules/react-native-dialog";
+import { CalendarList } from 'react-native-calendars';
+import Dialog from "react-native-dialog";
 
 export default class CalendarRender extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dialogVisible: false
+      dialogVisible: false,
+      currentDate: '',
+
     };
+  }
+
+  pickDate = (date) => {
+    this.setState({ currentDate: date})
   }
 
   showDialog = () => {
@@ -18,10 +24,14 @@ export default class CalendarRender extends React.Component {
   handleCancel = () => {
     this.setState({ dialogVisible: false });
   };
- 
-  handleDelete = () => {
+
+  handleOk = () => {
     this.setState({ dialogVisible: false });
   };
+ 
+  // handleDelete = () => {
+  //   this.setState({ dialogVisible: false });
+  // };
 
   render() {
     const vacation = {key:'vacation', color: 'red', selectedDotColor: 'blue'};
@@ -37,7 +47,7 @@ export default class CalendarRender extends React.Component {
           scrollEnabled={true}
           showScrollIndicator={true}
           firstDay={1}
-          onDayPress={(day) => {console.log('selected day', day)}}
+          onDayPress={(day) => {this.pickDate(day.dateString)}}
           onDayLongPress={this.showDialog}
           markedDates={{
             '2019-10-11': {dots: [vacation, massage, workout], selected: true, selectedColor: 'red'},
@@ -70,13 +80,15 @@ export default class CalendarRender extends React.Component {
           }}
         />
         <Dialog.Container visible={this.state.dialogVisible}>
-          <Dialog.Title>Add new event</Dialog.Title>
-          <Dialog.Description>
+          <Dialog.Title>{this.state.currentDate}</Dialog.Title>
+          {/* <Dialog.Description>
             Add event to calendar
-          </Dialog.Description>
-          {/* <Dialog.Input label="Add event" onChangeText={} ></Dialog.Input> */}
+          </Dialog.Description> */}
+          <Dialog.Input placeholder='add your event here...' ></Dialog.Input>
           <Dialog.Button label="Cancel" onPress={this.handleCancel} />
-          <Dialog.Button label="Delete" onPress={this.handleDelete} />
+          {/* <Dialog.Button label="Delete" onPress={this.handleDelete} /> */}
+          <Dialog.Button label="Ok" onPress={this.handleCancel} />
+
         </Dialog.Container>
       </View>
     );

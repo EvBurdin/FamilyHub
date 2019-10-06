@@ -8,7 +8,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <View>
-        <Text style={{fontSize: 30}}>Main</Text>
+        <Text style={{fontSize: 30, marginTop: 50, textAlign: 'center'}}>Main</Text>
       </View>
     );
   }
