@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
 import { AuthSession } from 'expo';
-import { StyleSheet, Text, View, TextInput, Button, TouchableHighlight, Image, Alert } from 'react-native';
-import axios from 'axios';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  TouchableHighlight,
+  TouchableOpacity,
+  Image,
+  Alert,
+  AsyncStorage,
+} from 'react-native';
+
+const STORAGE_KEY = '@save_cookie';
 
 export default class LoginView extends Component {
   constructor(props) {
@@ -9,8 +21,32 @@ export default class LoginView extends Component {
     state = {
       email: '',
       password: '',
+      cookie: '',
     };
   }
+
+  save = async cookie => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, cookie);
+      console.log('Data successfully saved!');
+      this.setState({ cookie });
+    } catch (e) {
+      alert('Failed to save cookie.');
+    }
+  };
+
+  retrieveData = async () => {
+    try {
+      const cookie = await AsyncStorage.getItem(STORAGE_KEY);
+
+      if (cookie !== null) {
+        // this.setState({ cookie })
+        console.log(cookie);
+      }
+    } catch (e) {
+      alert('Failed to load cookie.');
+    }
+  };
 
   onClickListener = viewId => {
     Alert.alert('Alert', 'Button pressed ' + viewId);
@@ -26,12 +62,21 @@ export default class LoginView extends Component {
     console.log(result);
 
     if (result.type === 'success') {
-      const response = await axios.get('http://134.209.82.36.nip.io:3000/api/logged');
-      const user = response.data;
-      console.log(user);
+      const response = await fetch('http://134.209.82.36.nip.io:3000/api/logged', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Cache: 'no-cache',
+          credentials: 'same-origin',
+          Cookie: `connect.sid=${result.params.cookies}`,
+        },
+      });
+      this.save(result.params.cookies);
+      const data = await response.json();
+      console.log(data);
     }
-
-    this.setState({ result });
+    // this.setState({ result });
   };
 
   render() {
@@ -39,10 +84,10 @@ export default class LoginView extends Component {
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ color: 'white', fontSize: 30, backgroundColor: 'black' }}>Family</Text>
+            <Text style={{ color: 'white', fontSize: 40, backgroundColor: 'black', borderRadius: 5 }}>Family</Text>
           </View>
-          <View style={{ marginTop: -2, marginLeft: 60 }}>
-            <Text style={{ color: 'black', fontSize: 30, backgroundColor: '#FFFF33' }}>Hub</Text>
+          <View style={{ marginTop: -2, marginLeft: 70 }}>
+            <Text style={{ color: 'black', fontSize: 40, backgroundColor: '#FFFF33', borderRadius: 5 }}>Hub</Text>
           </View>
         </View>
         <View style={styles.inputContainer}>
@@ -78,25 +123,23 @@ export default class LoginView extends Component {
           />
         </View>
 
-        <TouchableHighlight
+        <TouchableOpacity
           style={[styles.buttonContainer, styles.loginButton]}
           onPress={() => this.onClickListener('login')}
         >
           <Text style={styles.loginText}>Login</Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
 
-        <TouchableHighlight
-          style={[styles.buttonContainer, styles.loginButton]}
-          onPress={() => this.signInWithGoogle()}
-        >
-          <Text style={styles.loginText}>Login with Google</Text>
-        </TouchableHighlight>
+        <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.signInWithGoogle()}>
+          <Image style={styles.inputIcon} source={{ uri: 'https://img.icons8.com/color/48/000000/google-logo.png' }} />
+          <Text style={styles.loginText}>Sign in with Google</Text>
+        </TouchableOpacity>
 
         <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('restore_password')}>
           <Text>Forgot your password?</Text>
         </TouchableHighlight>
 
-        <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('register')}>
+        <TouchableHighlight style={styles.buttonContainer} onPress={() => this.retrieveData()}>
           <Text>Register</Text>
         </TouchableHighlight>
       </View>
@@ -118,7 +161,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     borderBottomColor: '#F5FCFF',
     backgroundColor: '#FFFFFF',
-    // borderRadius: 30,
+    borderRadius: 5,
     borderBottomWidth: 1,
     width: 250,
     height: 45,
@@ -145,13 +188,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     width: 250,
-    borderRadius: 30,
+    borderRadius: 5,
   },
   loginButton: {
     backgroundColor: '#00b5ec',
   },
   loginText: {
     color: 'white',
+    fontSize: 20,
   },
   titleContainer: {
     height: 150,
