@@ -1,11 +1,15 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 
 export default class Home extends React.Component {
   static navigationOptions = {
     title: 'Home',
   };
   render() {
-    return <View></View>;
+    return (
+      <View>
+        <Text style={{fontSize: 30}}>Main</Text>
+      </View>
+    );
   }
 }
