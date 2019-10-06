@@ -3,6 +3,7 @@ import { createAppContainer } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import * as Permissions from 'expo-permissions';
 
 import Router from './src/router';
 import * as Location from 'expo-location';
@@ -27,11 +28,17 @@ export default class App extends React.Component {
     this.runGeoLocation();
   }
   runGeoLocation = async () => {
-    await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-      accuracy: Location.Accuracy.Highest,
-      timeInterval: 60000,
-      distanceInterval: 10,
-    });
+    const { status} = await Permissions.askAsync(Permissions.LOCATION);
+    if (status === 'granted') {
+      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        accuracy: Location.Accuracy.Highest,
+        timeInterval: 60000,
+        distanceInterval: 10,
+      });
+    } else {
+      return console.log("false");
+    }
+    
   };
   render() {
     return (
@@ -58,16 +65,16 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
       timestamp: data.locations[0].timestamp,
     };
     console.log(locationPostData);
-    const response = fetch('http://134.209.82.36.nip.io:3000/api/coordinates', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Cache: 'no-cache',
-        credentials: 'same-origin',
-        Cookie: 'connect.sid=s:IbnzXEW3AGkWl_taWKkfVK9Y4FDaohA1.vnysLJuDJH3L4pL5DudyhiaKSCMCA7FaxkWV/Hc/nEo',
-      },
-      body: JSON.stringify(locationPostData),
-    });
+    // const response = fetch('http://134.209.82.36.nip.io:3000/api/coordinates', {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //     Cache: 'no-cache',
+    //     credentials: 'same-origin',
+    //     Cookie: 'connect.sid=s:IbnzXEW3AGkWl_taWKkfVK9Y4FDaohA1.vnysLJuDJH3L4pL5DudyhiaKSCMCA7FaxkWV/Hc/nEo',
+    //   },
+    //   body: JSON.stringify(locationPostData),
+    // });
   }
 });
