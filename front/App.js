@@ -57,17 +57,17 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
       speed: data.locations[0].coords.speed,
       timestamp: data.locations[0].timestamp,
     };
-    console.log(locationPostData);
-    const response = fetch('http://134.209.82.36.nip.io:3000/api/coordinates', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Cache: 'no-cache',
-        credentials: 'same-origin',
-        Cookie: 'connect.sid=s:IbnzXEW3AGkWl_taWKkfVK9Y4FDaohA1.vnysLJuDJH3L4pL5DudyhiaKSCMCA7FaxkWV/Hc/nEo',
-      },
-      body: JSON.stringify(locationPostData),
-    });
+    // console.log(locationPostData);
+    // const response = fetch('http://134.209.82.36.nip.io:3000/api/coordinates', {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //     Cache: 'no-cache',
+    //     credentials: 'same-origin',
+    //     Cookie: 'connect.sid=s:IbnzXEW3AGkWl_taWKkfVK9Y4FDaohA1.vnysLJuDJH3L4pL5DudyhiaKSCMCA7FaxkWV/Hc/nEo',
+    //   },
+    //   body: JSON.stringify(locationPostData),
+    // });
   }
 });
