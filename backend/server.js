@@ -15,13 +15,13 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const db = require('./models/Index');
 // const sequelize = require('./dbSettings/sequelize');
-const serializeUser = require('./routes/serealize.js');
-const deserializeUser = require('./routes/deserialize.js');
+const serializeUser = require('./helpers/serealize.js');
+const deserializeUser = require('./helpers/deserialize.js');
 const forceSchemaUpdate = require('./seeders/forceSchemaUpdate');
 require('pretty-error').start();
 
 const app = express();
-const apiRouter = require('./routes/api');
+const apiRouter = require('./routes/api/api');
 
 app.use(
   fileUpload({

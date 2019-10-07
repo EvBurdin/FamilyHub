@@ -7,7 +7,7 @@ if (global.db) {
   module.exports = global.db;
 }
 global.db = {};
-const {db} = global;
+const { db } = global;
 
 const sequelize = new Sequelize(process.env.dataBase, process.env.dbUser, process.env.dbPassword, {
   host: process.env.host,
