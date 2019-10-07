@@ -28,7 +28,7 @@ export default class App extends React.Component {
     this.runGeoLocation();
   }
   runGeoLocation = async () => {
-    const { status} = await Permissions.askAsync(Permissions.LOCATION);
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status === 'granted') {
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         accuracy: Location.Accuracy.Highest,
@@ -36,9 +36,8 @@ export default class App extends React.Component {
         distanceInterval: 10,
       });
     } else {
-      return console.log("false");
+      return console.log('false');
     }
-    
   };
   render() {
     return (

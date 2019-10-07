@@ -2,7 +2,10 @@ import { CHANGE_SELF_LOCATION, GET_FAMILY_LOCATION } from '../actionNames/mapAct
 
 const initState = {
   selfGPSLocation: '',
-  familyGPSLocation: [],
+  familyGPSLocation: {
+    latitude: 55.708906,
+    longitude: 37.5926676,
+  },
 };
 
 export default function reducer(state = initState, action) {
