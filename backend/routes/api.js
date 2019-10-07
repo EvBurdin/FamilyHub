@@ -1,10 +1,18 @@
+/* eslint-disable no-await-in-loop */
 const passport = require('passport');
 const express = require('express');
+const md5 = require('md5');
 const auth = require('./auth');
 const { isTodat } = require('../helpers/helpers');
 
 const {
- User, Coordinate, Family, Sequelize, Todo, sequelize 
+  User, //
+  Coordinate,
+  Family,
+  Sequelize,
+  Todo,
+  Calendar,
+  sequelize,
 } = require('../models/Index');
 
 const { Op } = Sequelize;
@@ -63,8 +71,14 @@ router
   })
   .post(auth, async (req, res) => {
     const {
- accuracy, altitude, heading, latitude, longitude, timestamp, speed 
-} = req.body;
+      accuracy, //
+      altitude,
+      heading,
+      latitude,
+      longitude,
+      timestamp,
+      speed,
+    } = req.body;
     const { id: UserId } = req.user;
     Coordinate.create({
       accuracy,
@@ -117,6 +131,110 @@ router
     todo.active = !!active;
     todo.save();
     res.json('success');
+  })
+  .delete(auth, async (req, res) => {
+    const { id } = req.body;
+    Todo.destroy({ where: { id } });
+    res.json('success');
+  });
+router
+  .route('/user/calendar')
+  .get(auth, async (req, res) => {
+    const { user } = req;
+    const todos = await user.getCalendars({
+      attributes: { exclude: ['FamilyId'] },
+      include: [{ model: Family, attributes: ['id', 'familyName'] }],
+    });
+    res.json(todos);
+  })
+  .post(auth, async (req, res) => {
+    const { user } = req;
+    const {
+      title, //
+      text,
+      dateStart,
+      dateEnd,
+      familyId: FamilyId,
+      periodic,
+      period,
+    } = req.body;
+    let periodStep = 0;
+    switch (period) {
+      case 'year':
+        periodStep = 1000 * 60 * 60 * 24 * 365;
+        break;
+      case 'month':
+        periodStep = 1000 * 60 * 60 * 24 * 30;
+        break;
+      case 'day':
+        periodStep = 1000 * 60 * 60 * 24;
+        break;
+      default:
+        periodStep = 1000 * 60 * 60 * 24 * 365;
+    }
+    if (periodic) {
+      for (let i = 0; i < 2; i++) {
+        const dateStartPer = new Date(dateStart).getTime() + i * periodStep;
+        const dateEndPer = new Date(dateEnd).getTime() + i * periodStep;
+        await Calendar.create({
+          title,
+          text,
+          dateStart: new Date(dateStartPer),
+          dateEnd: new Date(dateEndPer),
+          FamilyId,
+          author: user.id,
+          periodicId: md5(dateStart + title + text),
+        });
+      }
+    } else {
+      await Calendar.create({
+        title,
+        text,
+        dateStart: new Date(dateStart),
+        dateEnd: new Date(dateEnd),
+        FamilyId,
+        author: user.id,
+      });
+    }
+    res.json('success');
+  })
+  .put(auth, async (req, res) => {
+    const { user } = req;
+    const {
+      title, //
+      text,
+      dateStart,
+      dateEnd,
+      id,
+    } = req.body;
+    const calendar = await Calendar.findOne({ where: { id } });
+    const updateObj = {
+      title: title || calendar.title,
+      text: text || calendar.text,
+      dateStart: new Date(dateStart) || calendar.dateStart,
+      dateEnd: new Date(dateEnd) || calendar.dateEnd,
+    };
+    console.log(calendar.periodicId);
+
+    if (calendar.periodicId) {
+      await Calendar.update(updateObj, { where: { periodicId: calendar.periodicId } });
+    } else {
+      await Calendar.update(updateObj, { where: { id } });
+    }
+    calendar.save();
+    res.json('success');
+  })
+  .delete(auth, async (req, res) => {
+    const { user } = req;
+    const { id } = req.body;
+    const calendar = await Calendar.findOne({ where: { id } });
+    if (calendar.periodicId) {
+      await Calendar.destroy({ where: { periodicId: calendar.periodicId } });
+    } else {
+      await Calendar.destroy({ where: { id } });
+    }
+    calendar.save();
+    res.json('success');
   });
 
 router.route('/user/:username').get(auth, async (req, res) => {
@@ -137,9 +255,8 @@ router.route('/family/users').get(auth, async (req, res) => {
     joinTableAttributes: [],
     include: [
       {
-        model: User,
+        model: User.scope('clear'),
         as: 'Users',
-        attributes: { exclude: ['hash', 'salt'] },
         through: {
           attributes: [],
         },
@@ -157,7 +274,7 @@ router.route('/family/coordinates').get(auth, async (req, res) => {
     joinTableAttributes: [],
     include: [
       {
-        model: User,
+        model: User.scope('clear'),
         as: 'Users',
         attributes: ['username'],
         through: {
@@ -185,8 +302,29 @@ router.route('/family/todo').get(auth, async (req, res) => {
   const todos = await user.getFamilys({
     joinTableAttributes: [],
     attributes: ['id', 'familyName'],
-    include: [{ model: Todo, attributes: { exclude: ['FamilyId'] }, include: [{ model: User }] }],
+    include: [
+      {
+        model: Todo,
+        attributes: { exclude: ['FamilyId'] },
+        include: [{ model: User.scope('clear') }],
+      },
+    ],
   });
   res.json(todos);
+});
+router.route('/family/calendar').get(auth, async (req, res) => {
+  const { user } = req;
+  const calendar = await user.getFamilys({
+    joinTableAttributes: [],
+    attributes: ['id', 'familyName'],
+    include: [
+      {
+        model: Calendar,
+        attributes: { exclude: ['FamilyId', 'createdAt', 'updatedAt'] },
+        include: [{ model: User.scope('clear') }],
+      },
+    ],
+  });
+  res.json(calendar);
 });
 module.exports = router;

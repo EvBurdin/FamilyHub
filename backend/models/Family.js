@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
     );
-    Family.hasMany(models.Todo)
+    Family.hasMany(models.Todo);
+    Family.hasMany(models.Calendar);
   };
   return Family;
 };

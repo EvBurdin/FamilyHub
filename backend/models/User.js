@@ -34,7 +34,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       defaultScope: {
-        attributes: { exclude: ['hash', 'salt', 'createdAt', 'updatedAt'] },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+      },
+
+      scopes: {
+        clear: {
+          attributes: { exclude: ['createdAt', 'updatedAt', 'hash', 'salt'] },
+        },
       },
     },
   );
@@ -47,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = (models) => {
     User.hasMany(models.Coordinate);
     User.hasMany(models.Todo, { foreignKey: 'author' });
+    User.hasMany(models.Calendar, { foreignKey: 'author' });
     User.belongsToMany(models.Family, {
       through: 'UsersFamily',
       as: 'Familys',
