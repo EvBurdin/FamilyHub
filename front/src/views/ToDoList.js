@@ -10,7 +10,7 @@ export default class ToDoList extends React.Component {
       list: [],
       isVisibleNewTask: false,
       newTaskTitle: '',
-      editTaskID: Number,
+      editTaskID: -1,
     };
     this._onSaveNewTask = this._onSaveNewTask.bind(this);
   }
@@ -83,26 +83,26 @@ export default class ToDoList extends React.Component {
     console.log(`this.state.list.length: ${this.state.list.length}`);
     console.log(`this.state.newTaskTitle.length: ${this.state.newTaskTitle.length}`);
     console.log(`this.state.editTaskID: ${this.state.editTaskID}`);
-    console.log(`this.state.editTaskID.length: ${this.state.editTaskID.length}\n`);
+    console.log(`typeof this.state.editTaskID: ${typeof this.state.editTaskID}\n`);
 
-    this.state.list.length && this.state.newTaskTitle.length && this.state.editTaskID
+    this.state.list.length && this.state.newTaskTitle.length && this.state.editTaskID >= 0
       ? (console.log(`Edit - this.state.editTaskID: ${this.state.editTaskID}`),
         (newList = this.state.list),
         (newList[this.state.editTaskID].title = this.state.newTaskTitle),
-        this.setState({ list: newList, editTaskID: '', newTaskTitle: '', isVisibleNewTask: false }))
-      : this.state.list.length && !this.state.editTaskID
-      ? (console.log(`Not empty array - this.state.editTaskID.length: ${this.state.editTaskID.length}`),
+        this.setState({ list: newList, editTaskID: -1, newTaskTitle: '', isVisibleNewTask: false }))
+      : this.state.list.length && !(this.state.editTaskID >= 0)
+      ? (console.log(`Not empty array - this.state.editTaskID: ${this.state.editTaskID}`),
         this.setState({
           list: [...this.state.list, { title: this.state.newTaskTitle, checked: false }],
           newTaskTitle: '',
-          editTaskID: '',
+          editTaskID: -1,
           isVisibleNewTask: false,
         }))
       : (console.log(`Empty array - this.state.newTaskTitle.length: ${this.state.newTaskTitle.length}`),
         this.setState({
           list: [{ title: this.state.newTaskTitle, checked: false }],
           newTaskTitle: '',
-          editTaskID: '',
+          editTaskID: -1,
           isVisibleNewTask: false,
         }));
   };
