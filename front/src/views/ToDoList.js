@@ -68,7 +68,7 @@ export default class ToDoList extends React.Component {
   };
 
   _onPressCheckBox = keyI => {
-    console.log(`On one press - keyI: ${keyI}`);
+    // console.log(`On one press - keyI: ${keyI}`);
     return this.setState({
       newTaskTitle: this.state.list[keyI].title,
       editTaskID: keyI,
@@ -87,24 +87,30 @@ export default class ToDoList extends React.Component {
 
     this.state.list.length && this.state.newTaskTitle.length && this.state.editTaskID >= 0
       ? (console.log(`Edit - this.state.editTaskID: ${this.state.editTaskID}`),
-        (newList = this.state.list),
+        //edit task - not empty array && there is a new text && editing task ID
+        ((newList = this.state.list),
         (newList[this.state.editTaskID].title = this.state.newTaskTitle),
-        this.setState({ list: newList, editTaskID: -1, newTaskTitle: '', isVisibleNewTask: false }))
-      : this.state.list.length && !(this.state.editTaskID >= 0)
+        this.setState({ list: newList, editTaskID: -1, newTaskTitle: '', isVisibleNewTask: false })))
+      : this.state.list.length && this.state.newTaskTitle.length && !(this.state.editTaskID >= 0)
       ? (console.log(`Not empty array - this.state.editTaskID: ${this.state.editTaskID}`),
+        //adding new task - not empty array && there is a new text && not editing task ID
         this.setState({
           list: [...this.state.list, { title: this.state.newTaskTitle, checked: false }],
           newTaskTitle: '',
           editTaskID: -1,
           isVisibleNewTask: false,
         }))
-      : (console.log(`Empty array - this.state.newTaskTitle.length: ${this.state.newTaskTitle.length}`),
+      : this.state.newTaskTitle.length
+      ? (console.log(`Empty array - this.state.newTaskTitle.length: ${this.state.newTaskTitle.length}`),
+        //adding new task (first task) - empty array && not editing task ID
         this.setState({
           list: [{ title: this.state.newTaskTitle, checked: false }],
           newTaskTitle: '',
           editTaskID: -1,
           isVisibleNewTask: false,
-        }));
+        }))
+      : //trying to save empty task
+        this.setState({ isVisibleNewTask: false });
   };
 
   _onLongPressButton = keyI => {
