@@ -1,9 +1,21 @@
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { connect } from 'react-redux';
+import { getFamilyLocations } from '../../redux/actions/mapActions';
 
 class MapRender extends React.Component {
-  state = {};
+  state = {
+    locations: '',
+  };
+  componentDidMount() {
+    this.locationsFetch();
+  }
+
+  async locationsFetch() {
+    this.setState({
+      locations: await this.props.getFamilyLocations(this.props.cookies),
+    });
+  }
   render() {
     return (
       <MapView
@@ -15,16 +27,20 @@ class MapRender extends React.Component {
           longitudeDelta: 0.01,
         }}
       >
-        {this.props.allLocations && (
-          <Marker
-            coordinate={{
-              latitude: this.props.allLocations.latitude,
-              longitude: this.props.allLocations.longitude,
-            }}
-            title="title"
-            description="description"
-          />
-        )}
+        {!!this.props.allLocations &&
+          this.props.allLocations.map((el, index) => {
+            return (
+              <Marker
+                key={index}
+                coordinate={{
+                  latitude: +el.latitude,
+                  longitude: +el.longitude,
+                }}
+                title={el.user}
+                description="хз кто это"
+              />
+            );
+          })}
       </MapView>
     );
   }
@@ -33,11 +49,14 @@ class MapRender extends React.Component {
 function mapStateToProps(store) {
   return {
     allLocations: store.Map.familyGPSLocation,
+    cookies: store.User.cookies,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    getFamilyLocations: cookie => dispatch(getFamilyLocations(cookie)),
+  };
 }
 
 export default connect(
@@ -55,4 +74,20 @@ export default connect(
 //     title="title"
 //     description="description"
 //   />
+// }
+
+// {
+//   this.props.allLocations &&
+//   this.props.allLocations.map(el => {
+//     return (
+//       <Marker
+//         coordinate={{
+//           latitude: el.latitude,
+//           longitude: el.longitude,
+//         }}
+//       // title="asdasd"
+//       // description="хз кто это"
+//       />
+//     );
+//   })
 // }
