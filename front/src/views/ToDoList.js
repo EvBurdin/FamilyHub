@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, ScrollView } from 'react-native';
 import { Button, CheckBox, Overlay, Input } from 'react-native-elements';
@@ -11,18 +10,18 @@ export default class ToDoList extends React.Component {
       list: [],
       isVisibleNewTask: false,
       newTaskTitle: '',
-      editTaskID: '',
+      editTaskID: Number,
     };
     this._onSaveNewTask = this._onSaveNewTask.bind(this);
   }
 
   render() {
     return (
-      <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
+      <View style={{ flex: 1, flexDirection: 'column', marginTop: 30 }}>
         <TouchableHighlight underlayColor="white">
           <ScrollView>
             {this.state.list.map((item, i) => (
-              <View key={i + 100}>
+              <View key={i + 100} style={{ flex: 1, justifyContent: 'flex-end' }}>
                 <CheckBox
                   key={i}
                   title={item.title}
@@ -39,7 +38,7 @@ export default class ToDoList extends React.Component {
             ))}
           </ScrollView>
         </TouchableHighlight>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
           <Button onPress={() => this.setState({ isVisibleNewTask: true })} title="Create new task" color="#841584" />
         </View>
         <View>
@@ -69,6 +68,7 @@ export default class ToDoList extends React.Component {
   };
 
   _onPressCheckBox = keyI => {
+    console.log(`On one press - keyI: ${keyI}`);
     return this.setState({
       newTaskTitle: this.state.list[keyI].title,
       editTaskID: keyI,
@@ -78,21 +78,33 @@ export default class ToDoList extends React.Component {
 
   _onSaveNewTask = () => {
     let newList;
-    this.state.newTaskTitle && this.state.list.length && this.state.editTaskID
-      ? ((newList = this.state.list),
+    console.log('-----------------------');
+    console.log('onSaveNewTask - before setState:');
+    console.log(`this.state.list.length: ${this.state.list.length}`);
+    console.log(`this.state.newTaskTitle.length: ${this.state.newTaskTitle.length}`);
+    console.log(`this.state.editTaskID: ${this.state.editTaskID}`);
+    console.log(`this.state.editTaskID.length: ${this.state.editTaskID.length}\n`);
+
+    this.state.list.length && this.state.newTaskTitle.length && this.state.editTaskID
+      ? (console.log(`Edit - this.state.editTaskID: ${this.state.editTaskID}`),
+        (newList = this.state.list),
         (newList[this.state.editTaskID].title = this.state.newTaskTitle),
         this.setState({ list: newList, editTaskID: '', newTaskTitle: '', isVisibleNewTask: false }))
-      : !this.state.editTaskID && this.state.list.length
-      ? this.setState({
+      : this.state.list.length && !this.state.editTaskID
+      ? (console.log(`Not empty array - this.state.editTaskID.length: ${this.state.editTaskID.length}`),
+        this.setState({
           list: [...this.state.list, { title: this.state.newTaskTitle, checked: false }],
           newTaskTitle: '',
+          editTaskID: '',
           isVisibleNewTask: false,
-        })
-      : this.setState({
+        }))
+      : (console.log(`Empty array - this.state.newTaskTitle.length: ${this.state.newTaskTitle.length}`),
+        this.setState({
           list: [{ title: this.state.newTaskTitle, checked: false }],
           newTaskTitle: '',
+          editTaskID: '',
           isVisibleNewTask: false,
-        });
+        }));
   };
 
   _onLongPressButton = keyI => {
