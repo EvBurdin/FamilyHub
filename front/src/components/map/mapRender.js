@@ -13,13 +13,13 @@ class showMap extends React.Component {
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
-       />
+      />
     );
   }
 }
 function mapStateToProps(store) {
   return {
-    myLocation: store.map.selfGPSLocation,
+    myLocation: store.Map.selfGPSLocation,
   };
 }
 function mapDispatchToProps(dispatch) {

@@ -24,7 +24,7 @@ const LOCATION_TASK_NAME = 'background-location-task';
 
 export default class App extends React.Component {
   componentDidMount() {
-    this.runGeoLocation();
+    // this.runGeoLocation();
   }
   runGeoLocation = async () => {
     await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {

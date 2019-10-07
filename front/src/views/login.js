@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { AuthSession } from 'expo';
+import { connect } from 'react-redux';
+import { userLogin } from '../redux/actions/userActions';
 import {
   StyleSheet,
   Text,
@@ -15,7 +17,7 @@ import {
 
 const STORAGE_KEY = '@save_cookie';
 
-export default class LoginView extends Component {
+class LoginView extends Component {
   constructor(props) {
     super(props);
     state = {
@@ -24,24 +26,50 @@ export default class LoginView extends Component {
       cookie: '',
     };
   }
+  componentDidMount() {
+    this.logged();
+  }
 
+  async logged() {
+    let cookie = await this.retrieveData();
+    console.log(cookie);
+    if (cookie) {
+      console.log('qwerty');
+      const response = await fetch('http://134.209.82.36.nip.io:3000/api/logged', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Cache: 'no-cache',
+          credentials: 'same-origin',
+          Cookie: `connect.sid=${cookie}`,
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      this.props.userLogin(data, cookie);
+      this.props.navigation.navigate('Main');
+    }
+  }
   save = async cookie => {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, cookie);
       console.log('Data successfully saved!');
       this.setState({ cookie });
+      return true;
     } catch (e) {
-      alert('Failed to save cookie.');
+      // alert('Failed to save cookie.');
+      return false;
     }
   };
 
   retrieveData = async () => {
     try {
       const cookie = await AsyncStorage.getItem(STORAGE_KEY);
-
       if (cookie !== null) {
         // this.setState({ cookie })
-        console.log(cookie);
+        // console.log(cookie);
+        return cookie;
       }
     } catch (e) {
       alert('Failed to load cookie.');
@@ -62,19 +90,10 @@ export default class LoginView extends Component {
     console.log(result);
 
     if (result.type === 'success') {
-      const response = await fetch('http://134.209.82.36.nip.io:3000/api/logged', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Cache: 'no-cache',
-          credentials: 'same-origin',
-          Cookie: `connect.sid=${result.params.cookies}`,
-        },
-      });
-      this.save(result.params.cookies);
-      const data = await response.json();
-      console.log(data);
+      const save = await this.save(result.params.cookies);
+      if (save) {
+        this.logged();
+      }
     }
     // this.setState({ result });
   };
@@ -147,9 +166,25 @@ export default class LoginView extends Component {
   }
 }
 
-LoginView.navigationOptions = {
-  header: null,
-};
+function mapStateToProps(store) {
+  return {
+    // isUserLogin: !!store.userReducer.user,
+    // themes: store.questionReducer.questions
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    userLogin: (user, cookie) => dispatch(userLogin(user, cookie)),
+  };
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LoginView);
+
+// LoginView.navigationOptions = {
+//   header: null,
+// };
 
 const styles = StyleSheet.create({
   container: {
