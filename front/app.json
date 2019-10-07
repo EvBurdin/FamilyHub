@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "FamilyHub",
-    "slug": "front",
+    "slug": "family-hub",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
