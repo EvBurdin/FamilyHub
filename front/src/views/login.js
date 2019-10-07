@@ -26,6 +26,11 @@ class LoginView extends Component {
       cookie: '',
     };
   }
+
+  static navigationOptions = {
+    // drawerLockMode:'',
+  };
+
   componentDidMount() {
     this.logged();
   }
@@ -51,6 +56,7 @@ class LoginView extends Component {
       this.props.navigation.navigate('Main');
     }
   }
+
   save = async cookie => {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, cookie);
@@ -74,7 +80,7 @@ class LoginView extends Component {
     } catch (e) {
       alert('Failed to load cookie.');
     }
-  };
+  }
 
   onClickListener = viewId => {
     Alert.alert('Alert', 'Button pressed ' + viewId);
@@ -97,7 +103,9 @@ class LoginView extends Component {
     }
     // this.setState({ result });
   };
-
+  toMain(){
+    this.props.navigation.navigate('Drawer')
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -158,7 +166,7 @@ class LoginView extends Component {
           <Text>Forgot your password?</Text>
         </TouchableHighlight>
 
-        <TouchableHighlight style={styles.buttonContainer} onPress={() => this.retrieveData()}>
+        <TouchableHighlight style={styles.buttonContainer} onPress={() => this.toMain()}>
           <Text>Register</Text>
         </TouchableHighlight>
       </View>

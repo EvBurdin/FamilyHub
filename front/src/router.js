@@ -1,16 +1,30 @@
-import { createDrawerNavigator } from 'react-navigation';
+import { createDrawerNavigator,createSwitchNavigator } from 'react-navigation';
 import Main from './views/main';
 import showMap from './views/map';
 import Login from './views/login';
 
-export default createDrawerNavigator({
-  Login: {
-    screen: Login,
+const drawerNavigator = createDrawerNavigator({
+  Main:{
+    screen:Main
   },
-  Main: {
-    screen: Main,
-  },
-  Map: {
-    screen: showMap,
-  },
+  showMap,
+},{
+  initialRouteName : 'Main',
 });
+export default createSwitchNavigator({
+  Login:{
+    screen:Login
+  },
+  Drawer: drawerNavigator,
+});
+
+
+// export default createDrawerNavigator({
+//   Login:{
+//     screen:Login
+//   },
+//   Main,
+//   showMap,
+// },{
+//   initialRouteName : 'Login',
+// });

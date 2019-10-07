@@ -18,9 +18,10 @@ const composeEnchanters = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(rootReducer, composeEnchanters(applyMiddleware(thunk)));
 
 const Navigation = createAppContainer(Router);
+const LOCATION_TASK_NAME = 'background-location-task';
 
 export default class App extends React.Component {
-  state = {};
+  
   render() {
     return (
       <Provider store={store}>
