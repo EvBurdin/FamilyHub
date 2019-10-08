@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { AuthSession } from 'expo';
 import { connect } from 'react-redux';
 import { userLogin } from '../redux/actions/userActions';
-import {ToastAndroid} from 'react-native';
+import { ToastAndroid } from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -46,20 +46,24 @@ class LoginView extends Component {
           Cookie: `connect.sid=${cookie}`,
         },
       });
-      const data = await response.json();
-      console.log(data);
-      this.props.userLogin(data, cookie);
-      if(data.Families[0] !== undefined){
-        ToastAndroid.showWithGravityAndOffset(
-          "Auto logged with "+ data.username,
-          ToastAndroid.SHORT,
-          ToastAndroid.TOP,
-          20,
-          200,
-        );
-        this.props.navigation.navigate('Main');
-      }else{
-        this.props.navigation.navigate('FamilyCreateJoin');
+      try {
+        const data = await response.json();
+        console.log(data);
+        this.props.userLogin(data, cookie);
+        if (data.Families[0] !== undefined) {
+          ToastAndroid.showWithGravityAndOffset(
+            'Auto logged with ' + data.username,
+            ToastAndroid.LONG,
+            ToastAndroid.TOP,
+            20,
+            200,
+          );
+          this.props.navigation.navigate('Main');
+        } else {
+          this.props.navigation.navigate('FamilyCreateJoin');
+        }
+      } catch (e) {
+        await AsyncStorage.removeItem(STORAGE_KEY);
       }
     }
   }
@@ -170,7 +174,12 @@ class LoginView extends Component {
           <Text>Forgot your password?</Text>
         </TouchableHighlight>
 
-        <TouchableHighlight style={styles.buttonContainer} onPress={() => {this.props.navigation.navigate('FamilyCreateJoin')}}>
+        <TouchableHighlight
+          style={styles.buttonContainer}
+          onPress={() => {
+            this.props.navigation.navigate('FamilyCreateJoin');
+          }}
+        >
           <Text>Register</Text>
         </TouchableHighlight>
       </View>

@@ -1,46 +1,35 @@
 import { createSwitchNavigator } from 'react-navigation';
-import {createDrawerNavigator, DrawerNavigatorItems} from 'react-navigation-drawer'
+import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer';
+import { View, StyleSheet, ScrollView, Button, SafeAreaView, Dimensions } from 'react-native';
 import Main from './views/main';
 import showMap from './views/map';
 import Login from './views/login';
 import Logout from './views/logout';
-import FamilyCreateJoin from './views/familyCreateJoin'
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Button,
-  SafeAreaView,
-  Dimensions,
-} from 'react-native';
+import FamilyCreateJoin from './views/familyCreateJoin';
 
 const drawerNavigator = createDrawerNavigator({
-  Main:Main,
-  showMap:showMap,
-  Logout: Logout
+  Main,
+  showMap,
+  Logout,
 });
 
-const CustomDrawerComponent = props => (
+const CustomDrawerComponent = (props) => (
   <ScrollView>
-  <SafeAreaView
-    style={styles.container}
-    forceInset={{ top: 'always', horizontal: 'never' }}
-  >
-    <DrawerNavigatorItems {...props} />
-  </SafeAreaView>
-</ScrollView>
+    <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
+      <DrawerNavigatorItems {...props} />
+    </SafeAreaView>
+  </ScrollView>
 );
 
-
-export default createSwitchNavigator({
-  Login:{
-    screen:Login
+export default createSwitchNavigator(
+  {
+    Login,
+    FamilyCreateJoin: {
+      screen: FamilyCreateJoin,
+    },
+    Drawer: drawerNavigator,
   },
-  FamilyCreateJoin:{
-    screen:FamilyCreateJoin
+  {
+    initialRouteName: 'Login',
   },
-  Drawer: drawerNavigator,
-},{
-  initialRouteName : 'Login',
-});
-
+);
