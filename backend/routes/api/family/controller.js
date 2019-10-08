@@ -59,7 +59,7 @@ module.exports = {
               where: {
                 [Op.and]: [
                   sequelize.where(sequelize.fn('DATE', sequelize.col('timestamp')), sequelize.literal('CURRENT_DATE')),
-                  { UserId: { [Op.ne]: user.id } },
+                  // { UserId: { [Op.ne]: user.id } },
                 ],
               },
               attributes: ['latitude', 'longitude', 'timestamp'],
@@ -68,6 +68,7 @@ module.exports = {
         },
       ],
     });
+    // magic!!!! dont touch!
     family = JSON.parse(JSON.stringify(family.map((el) => el.toJSON())));
     for (let i = 0; i < family.length; i++) {
       const { Users } = family[i];
@@ -76,7 +77,7 @@ module.exports = {
       }
     }
     // mistic staring
-    // let = [family[0].toJSON(),family[1].toJSON()];
+    // let a = [family[0].toJSON(),family[1].toJSON()];
     return res.json(family);
   },
   async getTodos(req, res) {
