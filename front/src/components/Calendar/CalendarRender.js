@@ -1,10 +1,10 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React from 'react';
+import { View, Text } from 'react-native';
 import { CalendarList } from 'react-native-calendars';
-import Dialog from "react-native-dialog";
+import Dialog from 'react-native-dialog';
 import { connect } from 'react-redux';
 import { CheckBox } from 'react-native-elements';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import RadioGroup from 'react-native-radio-button-group';
 
 class CalendarRender extends React.Component {
   constructor(props) {
@@ -13,38 +13,35 @@ class CalendarRender extends React.Component {
       dialogVisible: false,
       currentDate: '',
       selected: {
-        '': { 'color': '' }
+        '': { color: '' },
       },
       title: '',
       text: '',
       dateEnd: '',
       periodic: '',
-      period:'',
+      period: '',
       checked: false,
+      selectedOption: '',
     };
   }
 
   pickDate = date => {
-    this.setState({ currentDate: date })
-  }
+    this.setState({ currentDate: date });
+  };
 
   showDialog = () => {
     this.setState({ dialogVisible: true });
   };
- 
+
   handleCancel = () => {
     this.setState({
       dialogVisible: false,
-
     });
-    
   };
-
-
 
   handleOk = () => {
     // console.log(this.state);
-    
+
     this.setState({
       dialogVisible: false,
       text: '',
@@ -54,7 +51,7 @@ class CalendarRender extends React.Component {
       },
     });
   };
- 
+
   handleDelete = () => {
     this.setState({
       dialogVisible: false,
@@ -66,9 +63,9 @@ class CalendarRender extends React.Component {
     });
   };
 
-  onChangeText = (text) => {
-    this.setState({text: text})
-  }
+  onChangeText = text => {
+    this.setState({ text: text });
+  };
 
   render() {
     // const vacation = {key:'vacation', color: 'red', selectedDotColor: 'blue'};
@@ -79,6 +76,7 @@ class CalendarRender extends React.Component {
     const reactNativeModalProps = {
       onBackdropPress: this.handleCancel,
     };
+    const radiogroup_options = [{ id: '0', label: 'week' }, { id: '1', label: 'month' }, { id: '2', label: 'year' }];
 
     return (
       <View>
@@ -142,7 +140,7 @@ class CalendarRender extends React.Component {
           {/* <Dialog.Description>
             Add event to calendar
           </Dialog.Description> */}
-          <Dialog.Input>Granny's birthday</Dialog.Input>
+          <Dialog.Input>- Granny's birthday</Dialog.Input>
 
           {/* <Dialog.Input>{this.state.text}</Dialog.Input> */}
           <Dialog.Input placeholder="Add..." onChangeText={text => this.onChangeText(text)}></Dialog.Input>
@@ -155,17 +153,22 @@ class CalendarRender extends React.Component {
             containerStyle={{ borderColor: 'white', backgroundColor: 'white' }}
             onPress={() => this.setState({ checked: !this.state.checked })}
           />
-          <RadioForm
-            radio_props={this.state.types}
-            initial={0}
-            formHorizontal={false}
-            labelHorizontal={true}
-            buttonColor={'#2196f3'}
-            animation={true}
-            onPress={value => {
-              this.setState({ value: value });
-            }}
-          />
+          {this.state.checked && (
+            <RadioGroup
+              horizontal
+              options={radiogroup_options}
+              onChange={option => this.setState({ selectedOption: option.label })}
+              style={{
+                width: 30,
+                height: 22,
+                borderColor: '#000',
+                borderWidth: 0.8,
+                marginRight: 0,
+                fillColor: '#279315',
+              }}
+            />
+          )}
+
           <Dialog.Button
             label="Delete"
             onPress={this.handleDelete}
@@ -183,9 +186,7 @@ class CalendarRender extends React.Component {
 }
 
 function mapStateToProps(store) {
-  return {
-    
-  };
+  return {};
 }
 function mapDispatchToProps(dispatch) {
   return {};
