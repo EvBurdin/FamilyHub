@@ -1,3 +1,4 @@
+const io = require('socket.io');
 const {
  Coordinate, Location, Sequelize, sequelize 
 } = require('../../../models/Index');
@@ -46,7 +47,7 @@ module.exports = {
         type: sequelize.QueryTypes.SELECT,
       },
     );
-
+    global.io.sockets.emit('hi', 'everyone');
     res.json(curLoccation);
   },
   async getLocations(req, res) {
@@ -76,6 +77,7 @@ module.exports = {
       point,
       FamilyId,
     });
+
     res.json('Success');
   },
 };

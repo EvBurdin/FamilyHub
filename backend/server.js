@@ -1,4 +1,5 @@
 // require('./workers/Worker.js');
+
 const express = require('express');
 const redis = require('redis');
 const morgan = require('morgan');
@@ -99,7 +100,5 @@ db.sequelize
   });
 
 app.use('/api', apiRouter);
-app.listen(3000, () => {
-  console.log('Server is running on port 3000!');
-  console.log(`${__dirname}`);
-});
+
+module.exports = app;
