@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { AuthSession } from 'expo';
 import { connect } from 'react-redux';
 import { userLogin } from '../redux/actions/userActions';
+import {ToastAndroid} from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -26,11 +27,6 @@ class LoginView extends Component {
       cookie: '',
     };
   }
-
-  static navigationOptions = {
-    // drawerLockMode:'',
-  };
-
   componentDidMount() {
     this.logged();
   }
@@ -53,10 +49,20 @@ class LoginView extends Component {
       const data = await response.json();
       console.log(data);
       this.props.userLogin(data, cookie);
-      this.props.navigation.navigate('Main');
+      if(data.Families[0] !== undefined){
+        ToastAndroid.showWithGravityAndOffset(
+          "Auto logged with "+ data.username,
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+          20,
+          200,
+        );
+        this.props.navigation.navigate('Main');
+      }else{
+        this.props.navigation.navigate('FamilyCreateJoin');
+      }
     }
   }
-
   save = async cookie => {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, cookie);
@@ -80,7 +86,7 @@ class LoginView extends Component {
     } catch (e) {
       alert('Failed to load cookie.');
     }
-  }
+  };
 
   onClickListener = viewId => {
     Alert.alert('Alert', 'Button pressed ' + viewId);
@@ -103,9 +109,7 @@ class LoginView extends Component {
     }
     // this.setState({ result });
   };
-  toMain(){
-    this.props.navigation.navigate('Drawer')
-  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -166,7 +170,7 @@ class LoginView extends Component {
           <Text>Forgot your password?</Text>
         </TouchableHighlight>
 
-        <TouchableHighlight style={styles.buttonContainer} onPress={() => this.toMain()}>
+        <TouchableHighlight style={styles.buttonContainer} onPress={() => {this.props.navigation.navigate('FamilyCreateJoin')}}>
           <Text>Register</Text>
         </TouchableHighlight>
       </View>
