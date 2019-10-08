@@ -32,7 +32,11 @@ module.exports = {
     res.json(dismissProtectedFields(req.user));
   },
   async getCurrentUser(req, res) {
-    res.json(dismissProtectedFields(req.user));
+    let { user } = req;
+    const families = await user.getFamilys();
+    user = dismissProtectedFields(user);
+    user.Families = families;
+    res.json(user);
   },
   async userLogout(req, res) {
     req.logout();
