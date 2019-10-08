@@ -3,7 +3,8 @@ import { View, Text } from "react-native";
 import { CalendarList } from 'react-native-calendars';
 import Dialog from "react-native-dialog";
 import { connect } from 'react-redux';
-
+import { CheckBox } from 'react-native-elements';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 class CalendarRender extends React.Component {
   constructor(props) {
@@ -16,7 +17,10 @@ class CalendarRender extends React.Component {
       },
       title: '',
       text: '',
-
+      dateEnd: '',
+      periodic: '',
+      period:'',
+      checked: false,
     };
   }
 
@@ -31,11 +35,7 @@ class CalendarRender extends React.Component {
   handleCancel = () => {
     this.setState({
       dialogVisible: false,
-      text: '',
-      selected: {
-        ...this.state.selected,
-        [this.state.currentDate]: '',
-      },
+
     });
     
   };
@@ -56,7 +56,14 @@ class CalendarRender extends React.Component {
   };
  
   handleDelete = () => {
-    this.setState({ selected: '' });
+    this.setState({
+      dialogVisible: false,
+      text: '',
+      selected: {
+        ...this.state.selected,
+        [this.state.currentDate]: '',
+      },
+    });
   };
 
   onChangeText = (text) => {
@@ -135,12 +142,40 @@ class CalendarRender extends React.Component {
           {/* <Dialog.Description>
             Add event to calendar
           </Dialog.Description> */}
-          {/* <Dialog.Input placeholder="add title here..."></Dialog.Input> */}
-          <Dialog.Input>{this.state.text}</Dialog.Input>
+          <Dialog.Input>Granny's birthday</Dialog.Input>
+
+          {/* <Dialog.Input>{this.state.text}</Dialog.Input> */}
           <Dialog.Input placeholder="Add..." onChangeText={text => this.onChangeText(text)}></Dialog.Input>
-          <Dialog.Button label="Cancel" onPress={this.handleCancel} />
-          {/* <Dialog.Button label="Delete" onPress={this.handleDelete} /> */}
-          <Dialog.Button label="Ok" onPress={this.handleOk} />
+          {/* <Dialog.Button label="Cancel" onPress={this.handleCancel} /> */}
+          {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
+          </View> */}
+          <CheckBox
+            title="Set period?"
+            checked={this.state.checked}
+            containerStyle={{ borderColor: 'white', backgroundColor: 'white' }}
+            onPress={() => this.setState({ checked: !this.state.checked })}
+          />
+          <RadioForm
+            radio_props={this.state.types}
+            initial={0}
+            formHorizontal={false}
+            labelHorizontal={true}
+            buttonColor={'#2196f3'}
+            animation={true}
+            onPress={value => {
+              this.setState({ value: value });
+            }}
+          />
+          <Dialog.Button
+            label="Delete"
+            onPress={this.handleDelete}
+            style={{ backgroundColor: '#DB514E', borderRadius: 5, color: 'white', width: 70 }}
+          />
+          <Dialog.Button
+            label="Ok"
+            onPress={this.handleOk}
+            style={{ backgroundColor: '#82AF12', borderRadius: 5, color: 'white', marginLeft: 155, width: 70 }}
+          />
         </Dialog.Container>
       </View>
     );
