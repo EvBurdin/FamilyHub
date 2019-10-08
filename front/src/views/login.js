@@ -32,7 +32,7 @@ class LoginView extends Component {
 
   async logged() {
     let cookie = await this.retrieveData();
-    console.log(cookie);
+    console.log(cookie + '  MY');
     if (cookie) {
       console.log('qwerty');
       const response = await fetch('http://134.209.82.36.nip.io:3000/api/logged', {
@@ -45,10 +45,14 @@ class LoginView extends Component {
           Cookie: `connect.sid=${cookie}`,
         },
       });
-      const data = await response.json();
-      console.log(data);
-      this.props.userLogin(data, cookie);
-      this.props.navigation.navigate('Main');
+      try {
+        const data = await response.json();
+        console.log(data);
+        this.props.userLogin(data, cookie);
+        this.props.navigation.navigate('Main');
+      } catch (e) {
+        await AsyncStorage.removeItem(STORAGE_KEY);
+      }
     }
   }
   save = async cookie => {
