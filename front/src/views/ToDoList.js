@@ -1,37 +1,28 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, ScrollView } from 'react-native';
-import { Button, CheckBox, Overlay, Input } from 'react-native-elements';
+import React, { Component } from 'react';
+import { StyleSheet, View, TouchableHighlight, ScrollView } from 'react-native';
+import { Button, CheckBox, Overlay, Input, Text } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { showModal, editInput, saveTask, checkTask, delTask } from '../redux/actions/todoActions';
 
-//
-export default class ToDoList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      list: [],
-      isVisibleNewTask: false,
-      newTaskTitle: '',
-      editTaskID: -1,
-    };
-    this._onSaveNewTask = this._onSaveNewTask.bind(this);
-  }
-
+class ToDoList extends Component {
+  state = {};
   render() {
     return (
       <View style={{ flex: 1, flexDirection: 'column', marginTop: 30 }}>
         <TouchableHighlight underlayColor="white">
           <ScrollView>
-            {this.state.list.map((item, i) => (
-              <View key={i + 100} style={{ flex: 1, justifyContent: 'flex-end' }}>
+            {this.props.list.map((item, i) => (
+              <View key={i} style={{ flex: 1, justifyContent: 'flex-end' }}>
                 <CheckBox
                   key={i}
                   title={item.title}
                   checked={item.checked}
                   onIconPress={() => {
-                    this._onClickCheckBox(i);
+                    () => this.props.checkTask(i);
                   }}
-                  onLongPress={() => this._onLongPressButton(i)}
+                  onLongPress={() => this.props.delTask(i)}
                   onPress={() => {
-                    this._onPressCheckBox(i);
+                    () => this.props.showModal(i);
                   }}
                 />
               </View>
@@ -39,86 +30,49 @@ export default class ToDoList extends React.Component {
           </ScrollView>
         </TouchableHighlight>
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-          <Button onPress={() => this.setState({ isVisibleNewTask: true })} title="Create new task" color="#841584" />
+          <Button onPress={() => this.props.showModal(-1)} title="Create new task" color="#841584" />
         </View>
         <View>
           <Overlay
             height="auto"
-            isVisible={this.state.isVisibleNewTask}
-            onBackdropPress={() => this.setState({ isVisibleNewTask: false })}
+            isVisible={this.props.isVisibleNewTask}
+            onBackdropPress={() => this.props.showModal(-1)}
           >
             <View>
-              <Input
-                autoFocus={true}
-                onChangeText={text => this.setState({ newTaskTitle: text })}
-                value={this.state.newTaskTitle}
-              />
-              <Button onPress={this._onSaveNewTask} title="Save task" />
+              <Input autoFocus onChangeText={text => this.props.editInput(text)} value={this.props.newTaskTitle} />
+              <Button onPress={() => this.props.saveTask()} title="Save task" />
             </View>
           </Overlay>
         </View>
       </View>
     );
   }
+}
 
-  _onClickCheckBox = keyI => {
-    const newList = this.state.list;
-    newList[keyI].checked = !newList[keyI].checked;
-    return this.setState({ list: newList });
-  };
-
-  _onPressCheckBox = keyI => {
-    // console.log(`On one press - keyI: ${keyI}`);
-    return this.setState({
-      newTaskTitle: this.state.list[keyI].title,
-      editTaskID: keyI,
-      isVisibleNewTask: true,
-    });
-  };
-
-  _onSaveNewTask = () => {
-    let newList;
-    console.log('-----------------------');
-    console.log('onSaveNewTask - before setState:');
-    console.log(`this.state.list.length: ${this.state.list.length}`);
-    console.log(`this.state.newTaskTitle.length: ${this.state.newTaskTitle.length}`);
-    console.log(`this.state.editTaskID: ${this.state.editTaskID}`);
-    console.log(`typeof this.state.editTaskID: ${typeof this.state.editTaskID}\n`);
-
-    this.state.list.length && this.state.newTaskTitle.length && this.state.editTaskID >= 0
-      ? (console.log(`Edit - this.state.editTaskID: ${this.state.editTaskID}`),
-        //edit task - not empty array && there is a new text && editing task ID
-        ((newList = this.state.list),
-        (newList[this.state.editTaskID].title = this.state.newTaskTitle),
-        this.setState({ list: newList, editTaskID: -1, newTaskTitle: '', isVisibleNewTask: false })))
-      : this.state.list.length && this.state.newTaskTitle.length && !(this.state.editTaskID >= 0)
-      ? (console.log(`Not empty array - this.state.editTaskID: ${this.state.editTaskID}`),
-        //adding new task - not empty array && there is a new text && not editing task ID
-        this.setState({
-          list: [...this.state.list, { title: this.state.newTaskTitle, checked: false }],
-          newTaskTitle: '',
-          editTaskID: -1,
-          isVisibleNewTask: false,
-        }))
-      : this.state.newTaskTitle.length
-      ? (console.log(`Empty array - this.state.newTaskTitle.length: ${this.state.newTaskTitle.length}`),
-        //adding new task (first task) - empty array && not editing task ID
-        this.setState({
-          list: [{ title: this.state.newTaskTitle, checked: false }],
-          newTaskTitle: '',
-          editTaskID: -1,
-          isVisibleNewTask: false,
-        }))
-      : //trying to save empty task
-        this.setState({ isVisibleNewTask: false });
-  };
-
-  _onLongPressButton = keyI => {
-    this.setState({
-      list: this.state.list.filter((task, index) => index !== keyI),
-    });
+function mapStateToProps(state) {
+  // console.log(state);
+  return {
+    list: state.ToDoList.list,
+    newTaskTitle: state.ToDoList.newTaskTitle,
+    isVisibleNewTask: state.ToDoList.isVisibleNewTask,
+    editTaskID: state.ToDoList.editTaskID,
   };
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    showModal: i => dispatch(showModal(i)),
+    editInput: text => dispatch(editInput(text)),
+    saveTask: () => dispatch(saveTask()),
+    checkTask: i => dispatch(checkTask(i)),
+    delTask: i => dispatch(delTask(i)),
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ToDoList);
 
 const styles = StyleSheet.create({
   container: {
