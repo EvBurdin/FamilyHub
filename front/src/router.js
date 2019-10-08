@@ -7,7 +7,9 @@ const drawerNavigator = createDrawerNavigator({
   Main:{
     screen:Main
   },
-  showMap,
+  showMap:{
+    screen:showMap
+  },
 },{
   initialRouteName : 'Main',
 });
@@ -16,15 +18,7 @@ export default createSwitchNavigator({
     screen:Login
   },
   Drawer: drawerNavigator,
+},{
+  initialRouteName : 'Login',
 });
 
-
-// export default createDrawerNavigator({
-//   Login:{
-//     screen:Login
-//   },
-//   Main,
-//   showMap,
-// },{
-//   initialRouteName : 'Login',
-// });
