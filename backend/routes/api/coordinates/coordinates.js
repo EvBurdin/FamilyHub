@@ -8,4 +8,9 @@ router
   .route('/')
   .get(auth, controller.getMyCoordinates)
   .post(auth, controller.setMyCoordinates);
+router
+  .route('/location')
+  .get(auth, controller.getLocations)
+  .post(auth, controller.setLocation);
+
 module.exports = router;

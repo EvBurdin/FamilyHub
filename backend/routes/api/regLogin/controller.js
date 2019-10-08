@@ -33,7 +33,10 @@ module.exports = {
   },
   async getCurrentUser(req, res) {
     let { user } = req;
-    const families = await user.getFamilys();
+    const families = await user.getFamilys({
+      joinTableAttributes: [],
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+    });
     user = dismissProtectedFields(user);
     user.Families = families;
     res.json(user);

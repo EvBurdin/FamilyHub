@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     );
     Family.hasMany(models.Todo);
     Family.hasMany(models.Calendar);
+    Family.hasMany(models.Location);
   };
   return Family;
 };

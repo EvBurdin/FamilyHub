@@ -15,8 +15,10 @@ const { Op } = Sequelize;
 
 module.exports = {
   async addFamily(req, res) {
+    const { user } = req;
     const { familyName } = req.body;
     const family = await Family.create({ familyName });
+    user.addFamilys(family.id);
     res.json(family);
   },
   async getUsers(req, res) {

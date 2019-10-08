@@ -122,7 +122,6 @@ module.exports = {
       dateStart: new Date(dateStart) || calendar.dateStart,
       dateEnd: new Date(dateEnd) || calendar.dateEnd,
     };
-    console.log(calendar.periodicId);
 
     if (calendar.periodicId) {
       await Calendar.update(updateObj, { where: { periodicId: calendar.periodicId } });
