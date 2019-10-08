@@ -17,8 +17,8 @@ module.exports = {
   async setFamily(req, res) {
     const { user } = req;
     const { id } = req.body;
-    await user.addFamilys(id);
-    res.json('success');
+    const family = await user.addFamilys(id);
+    res.json(family);
   },
   async getTodos(req, res) {
     const { user } = req;
