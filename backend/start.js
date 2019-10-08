@@ -3,12 +3,8 @@ const server = require('http').createServer(express);
 global.io = require('socket.io')(server);
 
 global.io.on('connection', (socket) => {
-  
-  console.log('aaa');
-  socket.on('asd', () => {
-    socket.emit('request', 'wewewewe');
-    console.log('fgh');
-  });
+  console.log(`==========${socket.id}=============`);
+  socket.emit('connect');
 });
 
 server.listen(3000);
