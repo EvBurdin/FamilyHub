@@ -65,8 +65,6 @@ module.exports = {
         timestamp: new Date(+timestamp),
         location: curLoccation[0].name,
       }),);
-    console.log(familyUsers);
-
     res.json(curLoccation);
   },
   async getLocations(req, res) {
