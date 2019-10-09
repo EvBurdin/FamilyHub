@@ -1,5 +1,5 @@
 import {
- SHOW_MODAL, EDIT_INPUT, SAVE_TASK, CHECK_TASK, DEL_TASK 
+ SHOW_MODAL, EDIT_INPUT, SAVE_TASK, CHECK_TASK, DEL_TASK, GET_FAMILY_TODOS 
 } from '../actionNames/todoTypes';
 
 const initialState = {
@@ -7,6 +7,9 @@ const initialState = {
   isVisibleNewTask: false,
   newTaskTitle: '',
   editTaskID: -1,
+  currentFamilyID: -1,
+  // Object.keys(myJson[0]): id,familyName,Todos
+  // id,goal,author,active,createdAt,updatedAt,User
 };
 
 export default function (state = initialState, action) {
@@ -19,7 +22,7 @@ export default function (state = initialState, action) {
       if (action.bool && action.index >= 0) {
         return {
           ...state,
-          newTaskTitle: state.list[action.index].title,
+          newTaskTitle: state.list[action.index].goal,
           editTaskID: action.index,
           isVisibleNewTask: action.bool,
         };
@@ -54,7 +57,7 @@ export default function (state = initialState, action) {
         console.log(`Edit - state.editTaskID: ${state.editTaskID}`);
         // edit task - not empty array && there is a new text && editing task ID
         newList = state.list;
-        newList[state.editTaskID].title = state.newTaskTitle;
+        newList[state.editTaskID].goal = state.newTaskTitle;
         return {
           ...state,
           list: newList,
@@ -68,7 +71,7 @@ export default function (state = initialState, action) {
         // adding new task - not empty array && there is a new text && not editing task ID
         return {
           ...state,
-          list: [...state.list, { title: state.newTaskTitle, checked: false }],
+          list: [...state.list, { title: state.newTaskTitle, active: false }],
           newTaskTitle: '',
           editTaskID: -1,
           isVisibleNewTask: false,
@@ -79,7 +82,7 @@ export default function (state = initialState, action) {
         // adding new task (first task) - empty array && not editing task ID
         return {
           ...state,
-          list: [{ title: state.newTaskTitle, checked: false }],
+          list: [{ goal: state.newTaskTitle, active: false }],
           newTaskTitle: '',
           editTaskID: -1,
           isVisibleNewTask: false,
@@ -90,8 +93,8 @@ export default function (state = initialState, action) {
 
     case CHECK_TASK: {
       const newList = state.list;
-      newList[action.index].checked = !newList[action.index].checked;
-      console.log(`newList[action.index].checked: ${newList[action.index].checked}`);
+      newList[action.index].active = !newList[action.index].active;
+      console.log(`newList[action.index].active: ${newList[action.index].active}`);
       return { ...state, list: [...newList] };
     }
 
@@ -99,6 +102,14 @@ export default function (state = initialState, action) {
       return {
         ...state,
         list: state.list.filter((task, index) => index !== action.index),
+      };
+    }
+
+    case GET_FAMILY_TODOS: {
+      return {
+        ...state,
+        list: action.loadedToDo,
+        currentFamilyID: action.loadFamilyID,
       };
     }
 

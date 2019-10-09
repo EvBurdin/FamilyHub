@@ -2,10 +2,19 @@ import React, { Component } from 'react';
 import { StyleSheet, View, TouchableHighlight, ScrollView } from 'react-native';
 import { Button, CheckBox, Overlay, Input, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { showModal, editInput, saveTask, checkTask, delTask } from '../redux/actions/todoActions';
+import { showModal, editInput, saveTask, checkTask, delTask, getFamilyToDo } from '../redux/actions/todoActions';
 
 class ToDoList extends Component {
   state = {};
+
+  componentDidMount() {
+    this.familyToDoFetch();
+  }
+
+  async familyToDoFetch() {
+    const someVariable = await this.props.getFamilyToDo(this.props.cookies);
+  }
+
   render() {
     return (
       <View style={{ flex: 1, flexDirection: 'column', marginTop: 30 }}>
@@ -14,11 +23,11 @@ class ToDoList extends Component {
             {this.props.list.map((item, i) => (
               <View key={i} style={{ flex: 1, justifyContent: 'flex-end' }}>
                 <CheckBox
-                  key={i}
-                  title={item.title}
-                  checked={item.checked}
+                  key={item.id}
+                  title={item.goal + ' id:' + item.id}
+                  checked={item.active}
                   onIconPress={() => {
-                    this.props.checkTask(i);
+                    this.props.checkTask(item.goal, item.active, i, item.id, this.props.cookies);
                   }}
                   onLongPress={() => this.props.delTask(i)}
                   onPress={() => {
@@ -56,6 +65,8 @@ function mapStateToProps(state) {
     newTaskTitle: state.ToDoList.newTaskTitle,
     isVisibleNewTask: state.ToDoList.isVisibleNewTask,
     editTaskID: state.ToDoList.editTaskID,
+    cookies: state.User.cookies,
+    curFamilyID: state.ToDoList.currentFamilyID,
   };
 }
 
@@ -64,8 +75,9 @@ function mapDispatchToProps(dispatch) {
     showModal: (bool, i) => dispatch(showModal(bool, i)),
     editInput: text => dispatch(editInput(text)),
     saveTask: () => dispatch(saveTask()),
-    checkTask: i => dispatch(checkTask(i)),
+    checkTask: (title, checkedBool, i, id, cookie) => dispatch(checkTask(title,checkedBool, i, id, cookie)),
     delTask: i => dispatch(delTask(i)),
+    getFamilyToDo: cookie => dispatch(getFamilyToDo(cookie)),
   };
 }
 
