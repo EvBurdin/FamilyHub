@@ -1,28 +1,32 @@
-import React from 'react';
-import { createAppContainer } from 'react-navigation';
-import { Provider } from 'react-redux';
-import {
- createStore, combineReducers, applyMiddleware, compose 
-} from 'redux';
-import thunk from 'redux-thunk';
+import React from "react";
+import { createAppContainer } from "react-navigation";
+import { Provider } from "react-redux";
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
 
-import Router from './src/router';
+import Router from "./src/router";
 
-import User from './src/redux/reducers/userReducer';
-import Map from './src/redux/reducers/mapReducer';
+import User from "./src/redux/reducers/userReducer";
+import Map from "./src/redux/reducers/mapReducer";
+import ToDoList from "./src/redux/reducers/todoReducer";
 
 const rootReducer = combineReducers({
   User,
   Map,
+  ToDoList
 });
-const composeEnchanters = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnchanters =
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(rootReducer, composeEnchanters(applyMiddleware(thunk)));
-// const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(
+  rootReducer,
+  composeEnchanters(applyMiddleware(thunk))
+);
 const Navigation = createAppContainer(Router);
-const LOCATION_TASK_NAME = 'background-location-task';
+const LOCATION_TASK_NAME = "background-location-task";
 
 export default class App extends React.Component {
+  state = {};
   render() {
     return (
       <Provider store={store}>

@@ -1,15 +1,19 @@
 import { createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer';
-import { View, StyleSheet, ScrollView, Button, SafeAreaView, Dimensions } from 'react-native';
+import {
+ View, StyleSheet, ScrollView, Button, SafeAreaView, Dimensions 
+} from 'react-native';
 import Main from './views/main';
 import showMap from './views/map';
 import Login from './views/login';
 import Logout from './views/logout';
+import AddNewZone from '';
 import FamilyCreateJoin from './views/familyCreateJoin';
 
 const drawerNavigator = createDrawerNavigator({
   Main,
   showMap,
+  AddNewZone,
   Logout,
 });
 

@@ -75,6 +75,7 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(MapRender);
+<<<<<<< HEAD
 
 // {
 //   this.props.myLocation &&
@@ -103,3 +104,5 @@ export default connect(
 //     );
 //   })
 // }
+=======
+>>>>>>> 60e9baba63301ab7b80a595b8c7772c8ff0d9df5
