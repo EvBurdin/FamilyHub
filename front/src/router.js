@@ -1,16 +1,20 @@
 import { createDrawerNavigator } from 'react-navigation';
 import Main from './views/main';
-// import showMap from './views/map';
 import Calendar from './views/Calendar'
+import showMap from './views/map';
+import Login from './views/login';
 
 export default createDrawerNavigator({
+  Login: {
+    screen: Login,
+  },
   Main: {
     screen: Main,
   },
-  // Notifications: {
-  //   screen: showMap,
-  // },
-  Notifications: {
+  Calendar: {
     screen: Calendar,
+  },
+  Map: {
+    screen: showMap,
   },
 });

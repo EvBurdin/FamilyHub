@@ -6,25 +6,35 @@ import { connect } from 'react-redux';
 import { CheckBox } from 'react-native-elements';
 import RadioGroup from 'react-native-radio-button-group';
 
+import { getEvents, addEvent, updateEvent, deleteEvent } from '../../redux/actions/calendarActions';
+
+
 class CalendarRender extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dialogVisible: false,
-      currentDate: '',
-      selected: {
-        '': { color: '' },
-      },
       title: '',
       text: '',
+      currentDate: '',
       dateEnd: '',
-      periodic: '',
+      periodic: false,
       period: '',
-      checked: false,
-      selectedOption: '',
     };
   }
 
+  componentDidMount() {
+    this.props.getEvents(this.props.cookies);
+  }
+
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.dialogVisible && !this.state.dialogVisible) {
+      this.props.getEvents(this.props.cookies);
+    }
+  }
+
+  // componentOnMount => actionGet
   pickDate = date => {
     this.setState({ currentDate: date });
   };
@@ -41,28 +51,31 @@ class CalendarRender extends React.Component {
 
   handleOk = () => {
     // console.log(this.state);
-
+    const event = {
+      title: this.state.title,
+      text: this.state.text,
+      dateStart: this.state.currentDate,
+      dateEnd: this.state.currentDate,
+      familyId: this.props.familyId,
+      periodic: this.state.periodic,
+      period: this.state.period
+    }
     this.setState({
       dialogVisible: false,
-      text: '',
-      selected: {
-        ...this.state.selected,
-        [this.state.currentDate]: { color: 'green' },
-      },
     });
+    this.props.addEvent(this.props.cookies,event);
   };
 
   handleDelete = () => {
     this.setState({
       dialogVisible: false,
-      text: '',
-      selected: {
-        ...this.state.selected,
-        [this.state.currentDate]: '',
-      },
     });
+    
   };
 
+  onChangeTitle = title => {
+    this.setState({ title: title });
+  };
   onChangeText = text => {
     this.setState({ text: text });
   };
@@ -72,7 +85,6 @@ class CalendarRender extends React.Component {
     // const massage = {key:'massage', color: 'blue', selectedDotColor: 'blue'};
     // const workout = {key:'workout', color: 'green'};
     // const currentDate = this.state.currentDate;
-    const selected = this.state.selected;
     const reactNativeModalProps = {
       onBackdropPress: this.handleCancel,
     };
@@ -89,6 +101,7 @@ class CalendarRender extends React.Component {
           </View>
         </View>
 
+        {!!this.props.selected &&         
         <CalendarList
           pastScrollRange={50}
           futureScrollRange={50}
@@ -100,10 +113,10 @@ class CalendarRender extends React.Component {
             this.showDialog();
           }}
           onDayLongPress={day => {
-            this.pickDate(day.dateString);
-            // console.log('selected day', day);
+            // this.pickDate(day.dateString);
+            console.log(this.state);
           }}
-          markedDates={selected}
+          markedDates={this.props.selected}
           // '2019-10-20': { textColor: 'green' },
           // '2019-10-22': { startingDay: true, color: 'green' },
           // '2019-10-23': { selected: true, endingDay: true, color: 'green', textColor: 'gray' },
@@ -135,29 +148,37 @@ class CalendarRender extends React.Component {
             textDayHeaderFontSize: 16,
           }}
         />
+        }
+
         <Dialog.Container visible={this.state.dialogVisible} {...reactNativeModalProps}>
           <Dialog.Title>Whats today?</Dialog.Title>
           {/* <Dialog.Description>
             Add event to calendar
           </Dialog.Description> */}
-          <Dialog.Input>- Granny's birthday</Dialog.Input>
+          {/* {this.props.title.map(el => (
+            <Dialog.Input>{el}</Dialog.Input>
+          ))}
+          {this.props.text.map(el => (
+            <Dialog.Input>{el}</Dialog.Input>
+          ))} */}
 
           {/* <Dialog.Input>{this.state.text}</Dialog.Input> */}
-          <Dialog.Input placeholder="Add..." onChangeText={text => this.onChangeText(text)}></Dialog.Input>
+          <Dialog.Input placeholder="Add title..." onChangeText={title => this.onChangeTitle(title)}></Dialog.Input>
+          <Dialog.Input placeholder="Add text..." onChangeText={text => this.onChangeText(text)}></Dialog.Input>
           {/* <Dialog.Button label="Cancel" onPress={this.handleCancel} /> */}
           {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
           </View> */}
           <CheckBox
             title="Set period?"
-            checked={this.state.checked}
+            checked={this.state.periodic}
             containerStyle={{ borderColor: 'white', backgroundColor: 'white' }}
-            onPress={() => this.setState({ checked: !this.state.checked })}
+            onPress={() => this.setState({ periodic: !this.state.periodic })}
           />
-          {this.state.checked && (
+          {this.state.periodic && (
             <RadioGroup
               horizontal
               options={radiogroup_options}
-              onChange={option => this.setState({ selectedOption: option.label })}
+              onChange={option => this.setState({ period: option.label })}
               style={{
                 width: 30,
                 height: 22,
@@ -186,13 +207,35 @@ class CalendarRender extends React.Component {
 }
 
 function mapStateToProps(store) {
-  return {};
+  return {
+    selected: store.Calendar.selected,
+    cookies: store.User.cookies,
+    familyId: store.User.user.Families[0].id,
+    // title: store.Calendar.title,
+    // text: store.Calendar.text,
+    // currentDate: store.Calendar.currentDate,
+    // dateEnd: store.Calendar.dateEnd,
+    // periodic: store.Calendar.periodic,
+    // period: store.Calendar.period,
+  };
 }
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    getEvents: cookie => dispatch(getEvents(cookie)),
+    addEvent: (cookie,event) => dispatch(addEvent(cookie,event)),
+    deleteEvent: (cookie,id) => dispatch(deleteEvent(cookie,id)),
+    // handleOk: 
+    // onChangeTitle: (title) => dispatch(onChangeTitle(title)),
+    // onChangeText: (text) => dispatch(onChangeText(text)),
+    // pickDate: date => dispatch(pickDate(date)),
+    // handleDelete: () => dispatch(handleDelete()),
+    // handleOk: () => dispatch(handleOk()),
+  };
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(CalendarRender);
+
+

@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import MapRender from '../components/map/mapRender';
+import MapRender from '../components/map/MapRender';
 
-export default class showMap extends React.Component {
+export default class ShowMap extends React.Component {
   static navigationOptions = {
     title: 'Map',
   };
