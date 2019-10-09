@@ -1,14 +1,14 @@
-import { CHANGE_SELF_LOCATION, GET_FAMILY_LOCATION } from '../actionNames/mapActionNames';
+import { PICK_COORDINATE, GET_FAMILY_LOCATION } from '../actionNames/mapActionNames';
 
 const initState = {
-  selfGPSLocation: '',
+  pickedCoordinate: '',
   familyGPSLocation: '',
 };
 
 export default function reducer(state = initState, action) {
   switch (action.type) {
-    case CHANGE_SELF_LOCATION:
-      return { ...state, selfGPSLocation: action.payload };
+    case PICK_COORDINATE:
+      return { ...state, pickedCoordinate: action.payload };
     case GET_FAMILY_LOCATION:
       return { ...state, familyGPSLocation: action.payload };
     default:

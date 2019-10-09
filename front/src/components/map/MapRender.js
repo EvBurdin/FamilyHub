@@ -6,6 +6,10 @@ import { getFamilyLocations } from '../../redux/actions/mapActions';
 class MapRender extends React.Component {
   state = {
     locations: '',
+    UserMarker: {
+      latitude: '',
+      longitude: '',
+    },
   };
   componentDidMount() {
     this.locationsFetch();
@@ -20,6 +24,14 @@ class MapRender extends React.Component {
     return (
       <MapView
         style={{ flex: 1 }}
+        onPress={res => {
+          this.setState({
+            UserMarker: {
+              latitude: res.nativeEvent.coordinate.latitude,
+              longitude: res.nativeEvent.coordinate.longitude,
+            },
+          });
+        }}
         initialRegion={{
           latitude: 55.708906,
           longitude: 37.5926676,

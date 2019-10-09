@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import io from 'socket.io-client';
-
+import { Notifications } from 'expo';
+import TEST from '../components/map/MapAddCoordinate';
 const LOCATION_TASK_NAME = 'background-location-task';
+let thisCookies = '';
 
 class Main extends React.Component {
   state = {
@@ -16,35 +17,42 @@ class Main extends React.Component {
   static navigationOptions = {
     title: 'Main',
   };
-
-  static showHELLO() {
-    console.log('HELLO');
-  }
   componentDidMount() {
-    // interval = setInterval(() => {
-    //   console.log('INTERVAL +++++++++++');
-    // }, 1000);
-
+    this.createChanels();
+    thisCookies = this.props.cookies;
     this.runGeoLocation();
-    this.socket = new WebSocket('http://134.209.82.36:3000');
-    this.socket.onopen = () => {
-      // connection opened
-      this.socket.send('something'); // send a message
-    };
   }
-  io = () => {
-    console.log('adssadsa');
+  createChanels = () => {
+    Notifications.createChannelAndroidAsync('EVENT', {
+      name: 'EVENT',
+      sound: true,
+      vibrate: true,
+      priority: 'max',
+    });
   };
-  static getCookies() {
-    return this.props.cookies;
+  static pushNotifications(data) {
+    console.log('Notifications = ' + data);
+
+    Notifications.presentLocalNotificationAsync({
+      title: data.title,
+      body: data.body,
+      Android: {
+        channelId: 'EVENT',
+      },
+      ChannelAndroid: {
+        name: 'FamilyHub',
+      },
+    });
   }
+
   runGeoLocation = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status === 'granted') {
+    const statusN = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (true) {
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         accuracy: Location.Accuracy.Highest,
         timeInterval: 180000,
-        distanceInterval: 10,
+        distanceInterval: 1,
       });
     } else {
       return console.log('false');
@@ -53,7 +61,7 @@ class Main extends React.Component {
   render() {
     return (
       <View>
-        <Button title="Go to static count screen" onPress={() => this.props.navigation.navigate('Map')} />
+        <TEST />
       </View>
     );
   }
@@ -74,8 +82,7 @@ export default connect(
   mapDispatchToProps,
 )(Main);
 
-TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
-  Main.showHELLO();
+TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
   if (error) {
     console.log(error);
     return;
@@ -90,36 +97,55 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
       speed: data.locations[0].coords.speed,
       timestamp: data.locations[0].timestamp,
     };
-    // console.log(locationPostData);
+    console.log(locationPostData);
     try {
-      fetch('http://134.209.82.36.nip.io:3000/api/coordinates', {
+      response = await fetch('http://134.209.82.36.nip.io:3000/api/coordinates', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
           Cache: 'no-cache',
           credentials: 'same-origin',
-          Cookie: `connect.sid=${Main.getCookies()}`,
+          Cookie: `connect.sid=${thisCookies}`,
         },
         body: JSON.stringify(locationPostData),
       });
     } catch (e) {
       console.log(e);
-      // try{
-      //   response = fetch('http://134.209.82.36.nip.io:3000/api/coordinates', {
-      //     method: 'GET',
-      //     headers: {
-      //       Accept: 'application/json',
-      //       'Content-Type': 'application/json',
-      //       Cache: 'no-cache',
-      //       credentials: 'same-origin',
-      //       Cookie: `connect.sid=${thisCookie}`,
-      //     },
-      //     body: JSON.stringify(locationPostData),
-      //   });
-      //   const myJson = await response.json();
-      // } catch (e) {
-      //   console.log(e);
+    }
+    try {
+      response = await fetch('http://134.209.82.36.nip.io:3000/api/events', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Cache: 'no-cache',
+          credentials: 'same-origin',
+          Cookie: `connect.sid=${thisCookies}`,
+        },
+      });
+      const myJson = await response.json();
+      if (myJson) {
+        for (let i = 0; i < myJson.length; i++) {
+          console.log('for ' + i);
+
+          body =
+            myJson[i].timestamp
+              .slice(11, 16)
+              .split(':')
+              .join('.') +
+            ' \n' +
+            myJson[i].User.username.split('@')[0] +
+            ' location: ' +
+            myJson[i].event;
+          Main.pushNotifications({
+            title: 'FamilyHub',
+            body: body,
+          });
+        }
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 });
