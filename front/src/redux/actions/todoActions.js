@@ -2,64 +2,61 @@ import {
  SHOW_MODAL, EDIT_INPUT, SAVE_TASK, CHECK_TASK, DEL_TASK, GET_FAMILY_TODOS 
 } from '../actionNames/todoTypes';
 
-export const showModal = (needToShow, i) => (dispatch) => {
+export const showModal = (needToShow, i, currID) => (dispatch) => {
   dispatch({
     type: SHOW_MODAL,
     bool: needToShow,
     index: i,
+    currIDinDB: currID,
   });
 };
 export const editInput = (txt) => async (dispatch) => {
-  // try {
-  //   console.log('-----------------------');
-  //   console.log('trying FETCH - PUT...');
-  //   const response = await fetch('http://134.209.82.36:3000/api/user/todo', {
-  //     method: 'PUT',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //       Cache: 'no-cache',
-  //       credentials: 'same-origin',
-  //       Cookie: `connect.sid=${cookies}`,
-  //     },
-  //     body: JSON.stringify({ a: 1, b: 'Textual content' }),
-  //   });
-  //   const myJson = await response.json();
-
   dispatch({
     type: EDIT_INPUT,
     text: txt,
   });
-  // } catch (err) {
-  //   console.log(`Error with EDITING family TODOs: ${err}\n`);
-  // }
 };
-export const saveTask = () => async (dispatch) => {
-  // try {
-  //   console.log('-----------------------');
-  //   console.log('trying FETCH - POST...');
-  //   const response = await fetch('http://134.209.82.36:3000/api/user/todo', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //       Cache: 'no-cache',
-  //       credentials: 'same-origin',
-  //       Cookie: `connect.sid=${cookies}`,
-  //     },
-  //     body: JSON.stringify({ a: 1, b: 'Textual content' }),
-  //   });
-  //   const myJson = await response.json();
 
+export const saveTaskNew = (todoLength, title, checked, taskID, cookies) => async (dispatch) => {
+  if (todoLength && title.length && taskID >= 0) {
+    // edit task - not empty array && there is a new text && editing task ID
+    try {
+      console.log('-----------------------');
+      console.log('trying FETCH - PUT - UPDATE TITLE...');
+      console.log(`todoLength: ${todoLength}, title: ${title}, checked: ${checked}, taskID: ${taskID}`);
+      const response = await fetch('http://134.209.82.36:3000/api/user/todo', {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Cache: 'no-cache',
+          credentials: 'same-origin',
+          Cookie: `connect.sid=${cookies}`,
+        },
+        body: JSON.stringify({
+          goal: title,
+          active: checked,
+          id: taskID,
+        }),
+      });
+      const myJson = await response.json();
+      console.log(`Response on UPDATE: ${myJson}`);
+      dispatch({
+        type: SAVE_TASK,
+      });
+    } catch (err) {
+      console.log(`Error with UPDATE TITLE family TODOs: ${err}\n`);
+    }
+  }
+};
+
+export const saveTask = () => async (dispatch) => {
   dispatch({
     type: SAVE_TASK,
   });
-  // } catch (err) {
-  //   console.log(`Error with saving family TODOs: ${err}\n`);
-  // }
 };
 
-export const checkTask = (title, checked, i, id, cookies) => async (dispatch) => {
+export const checkTask = (title, checked, i, taskID, cookies) => async (dispatch) => {
   try {
     console.log('-----------------------');
     console.log('trying FETCH - PUT - CHECK...');
@@ -72,17 +69,17 @@ export const checkTask = (title, checked, i, id, cookies) => async (dispatch) =>
         credentials: 'same-origin',
         Cookie: `connect.sid=${cookies}`,
       },
-      body: JSON.stringify({ goal: title, active: !checked, id }),
+      body: JSON.stringify({ goal: title, active: !checked, id: taskID }),
     });
     const myJson = await response.json();
-    console.log(`Respons on CHECK: ${myJson}`);
+    console.log(`Response on CHECK: ${myJson}`);
 
     dispatch({
       type: CHECK_TASK,
       index: i,
     });
   } catch (err) {
-    console.log(`Error with EDITING family TODOs: ${err}\n`);
+    console.log(`Error with CHECKING family TODOs: ${err}\n`);
   }
 };
 export const delTask = (i) => (dispatch) => {

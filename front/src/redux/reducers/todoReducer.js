@@ -7,6 +7,8 @@ const initialState = {
   isVisibleNewTask: false,
   newTaskTitle: '',
   editTaskID: -1,
+  currentCheck: undefined,
+  currentTaskIDInDB: -1,
   currentFamilyID: -1,
   // Object.keys(myJson[0]): id,familyName,Todos
   // id,goal,author,active,createdAt,updatedAt,User
@@ -24,6 +26,8 @@ export default function (state = initialState, action) {
           ...state,
           newTaskTitle: state.list[action.index].goal,
           editTaskID: action.index,
+          currentTaskIDInDB: action.currIDinDB,
+          currentCheck: state.list[action.index].active,
           isVisibleNewTask: action.bool,
         };
       }
@@ -31,6 +35,7 @@ export default function (state = initialState, action) {
         ...state,
         newTaskTitle: '',
         editTaskID: action.index,
+        currentCheck: undefined,
         isVisibleNewTask: action.bool,
       };
     }
@@ -51,6 +56,7 @@ export default function (state = initialState, action) {
       console.log(`state.list.length: ${state.list.length}`);
       console.log(`state.newTaskTitle.length: ${state.newTaskTitle.length}`);
       console.log(`state.editTaskID: ${state.editTaskID}`);
+      console.log(`state.currentCheck: ${state.currentCheck}`);
       console.log(`typeof state.editTaskID: ${typeof state.editTaskID}\n`);
 
       if (state.list.length && state.newTaskTitle.length && state.editTaskID >= 0) {
@@ -62,6 +68,7 @@ export default function (state = initialState, action) {
           ...state,
           list: newList,
           editTaskID: -1,
+          currentCheck: undefined,
           newTaskTitle: '',
           isVisibleNewTask: false,
         };
@@ -74,6 +81,7 @@ export default function (state = initialState, action) {
           list: [...state.list, { title: state.newTaskTitle, active: false }],
           newTaskTitle: '',
           editTaskID: -1,
+          currentCheck: undefined,
           isVisibleNewTask: false,
         };
       }
@@ -85,6 +93,7 @@ export default function (state = initialState, action) {
           list: [{ goal: state.newTaskTitle, active: false }],
           newTaskTitle: '',
           editTaskID: -1,
+          currentCheck: undefined,
           isVisibleNewTask: false,
         };
       }

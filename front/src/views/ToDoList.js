@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 import { StyleSheet, View, TouchableHighlight, ScrollView } from 'react-native';
 import { Button, CheckBox, Overlay, Input, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { showModal, editInput, saveTask, checkTask, delTask, getFamilyToDo } from '../redux/actions/todoActions';
+import {
+  showModal,
+  editInput,
+  saveTask,
+  checkTask,
+  delTask,
+  getFamilyToDo,
+  saveTaskNew,
+} from '../redux/actions/todoActions';
 
 class ToDoList extends Component {
   state = {};
@@ -31,7 +39,7 @@ class ToDoList extends Component {
                   }}
                   onLongPress={() => this.props.delTask(i)}
                   onPress={() => {
-                    this.props.showModal(true, i);
+                    this.props.showModal(true, i, item.id);
                   }}
                 />
               </View>
@@ -49,7 +57,18 @@ class ToDoList extends Component {
           >
             <View>
               <Input autoFocus onChangeText={text => this.props.editInput(text)} value={this.props.newTaskTitle} />
-              <Button onPress={() => this.props.saveTask()} title="Save task" />
+              <Button
+                onPress={() =>
+                  this.props.saveTaskNew(
+                    this.props.list.length,
+                    this.props.newTaskTitle,
+                    this.props.currentCheck,
+                    this.props.currentTaskIDInDB,
+                    this.props.cookies,
+                  )
+                }
+                title="Save task"
+              />
             </View>
           </Overlay>
         </View>
@@ -67,17 +86,21 @@ function mapStateToProps(state) {
     editTaskID: state.ToDoList.editTaskID,
     cookies: state.User.cookies,
     curFamilyID: state.ToDoList.currentFamilyID,
+    currentCheck: state.ToDoList.currentCheck,
+    currentTaskIDInDB: state.ToDoList.currentTaskIDInDB,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    showModal: (bool, i) => dispatch(showModal(bool, i)),
+    showModal: (bool, i, currID) => dispatch(showModal(bool, i, currID)),
     editInput: text => dispatch(editInput(text)),
     saveTask: () => dispatch(saveTask()),
-    checkTask: (title, checkedBool, i, id, cookie) => dispatch(checkTask(title,checkedBool, i, id, cookie)),
+    checkTask: (title, checkedBool, i, id, cookie) => dispatch(checkTask(title, checkedBool, i, id, cookie)),
     delTask: i => dispatch(delTask(i)),
     getFamilyToDo: cookie => dispatch(getFamilyToDo(cookie)),
+    saveTaskNew: (todoLength, title, checkedBool, taskID, cookie) =>
+      dispatch(saveTaskNew(todoLength, title, checkedBool, taskID, cookie)),
   };
 }
 
