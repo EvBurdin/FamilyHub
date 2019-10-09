@@ -73,6 +73,7 @@ module.exports = {
     for (let i = 0; i < family.length; i++) {
       const { Users } = family[i];
       for (let j = 0; j < Users.length; j++) {
+        Users[j].Coordinates.sort((a, b) => b.createdAt - a.createdAt);
         Users[j].Coordinates = Users[j].Coordinates.pop();
       }
     }

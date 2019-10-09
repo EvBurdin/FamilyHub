@@ -37,7 +37,7 @@ module.exports = {
     const familys = await user.getFamilys({ attributes: ['id'], joinTableAttributes: [] });
     const familysId = familys.map((el) => el.id);
     const jsonGeo = JSON.stringify({ type: 'Point', coordinates: [longitude, latitude] });
-    const radius = 0.002;
+    const radius = 0.005;
     const curLoccation = await sequelize.query(
       `SELECT *
       FROM "Locations"
