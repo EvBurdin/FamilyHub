@@ -18,11 +18,11 @@ class ToDoList extends Component {
                   title={item.title}
                   checked={item.checked}
                   onIconPress={() => {
-                    () => this.props.checkTask(i);
+                    this.props.checkTask(i);
                   }}
                   onLongPress={() => this.props.delTask(i)}
                   onPress={() => {
-                    () => this.props.showModal(i);
+                    this.props.showModal(true, i);
                   }}
                 />
               </View>
@@ -30,13 +30,13 @@ class ToDoList extends Component {
           </ScrollView>
         </TouchableHighlight>
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-          <Button onPress={() => this.props.showModal(-1)} title="Create new task" color="#841584" />
+          <Button onPress={() => this.props.showModal(true, -1)} title="Create new task" color="#841584" />
         </View>
         <View>
           <Overlay
             height="auto"
             isVisible={this.props.isVisibleNewTask}
-            onBackdropPress={() => this.props.showModal(-1)}
+            onBackdropPress={() => this.props.showModal(false, -1)}
           >
             <View>
               <Input autoFocus onChangeText={text => this.props.editInput(text)} value={this.props.newTaskTitle} />
@@ -61,7 +61,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    showModal: i => dispatch(showModal(i)),
+    showModal: (bool, i) => dispatch(showModal(bool, i)),
     editInput: text => dispatch(editInput(text)),
     saveTask: () => dispatch(saveTask()),
     checkTask: i => dispatch(checkTask(i)),

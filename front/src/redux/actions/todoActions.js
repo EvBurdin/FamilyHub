@@ -2,9 +2,10 @@ import {
  SHOW_MODAL, EDIT_INPUT, SAVE_TASK, CHECK_TASK, DEL_TASK 
 } from '../actionNames/todoTypes';
 
-export const showModal = (i) => (dispatch) => {
+export const showModal = (needToShow, i) => (dispatch) => {
   dispatch({
     type: SHOW_MODAL,
+    bool: needToShow,
     index: i,
   });
 };

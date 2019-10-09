@@ -10,21 +10,25 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
+  console.log('-----------------------');
+  console.log(`action.type: ${action.type}`);
+  console.log(`action.bool: ${action.bool}`);
+  console.log(`action.index: ${action.index}\n`);
   switch (action.type) {
     case SHOW_MODAL: {
-      if (action.index >= 0) {
+      if (action.bool && action.index >= 0) {
         return {
           ...state,
           newTaskTitle: state.list[action.index].title,
           editTaskID: action.index,
-          isVisibleNewTask: true,
+          isVisibleNewTask: action.bool,
         };
       }
       return {
         ...state,
         newTaskTitle: '',
-        editTaskID: -1,
-        isVisibleNewTask: true,
+        editTaskID: action.index,
+        isVisibleNewTask: action.bool,
       };
     }
 
@@ -87,7 +91,8 @@ export default function (state = initialState, action) {
     case CHECK_TASK: {
       const newList = state.list;
       newList[action.index].checked = !newList[action.index].checked;
-      return { ...state, list: newList };
+      console.log(`newList[action.index].checked: ${newList[action.index].checked}`);
+      return { ...state, list: [...newList] };
     }
 
     case DEL_TASK: {
