@@ -75,6 +75,9 @@ module.exports = {
       case 'month':
         periodStep = 1000 * 60 * 60 * 24 * 30;
         break;
+      case 'week':
+        periodStep = 1000 * 60 * 60 * 24 * 7;
+        break;
       case 'day':
         periodStep = 1000 * 60 * 60 * 24;
         break;

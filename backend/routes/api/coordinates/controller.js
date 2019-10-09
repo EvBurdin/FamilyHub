@@ -1,3 +1,4 @@
+/* eslint-disable no-cond-assign */
 const io = require('socket.io');
 const {
   Coordinate, //
@@ -17,6 +18,7 @@ module.exports = {
   },
   async setMyCoordinates(req, res) {
     const { user } = req;
+    const { id: UserId } = req.user;
     const {
       accuracy, //
       altitude,
@@ -26,17 +28,12 @@ module.exports = {
       timestamp,
       speed,
     } = req.body;
-    const { id: UserId } = req.user;
-    Coordinate.create({
-      accuracy,
-      altitude,
-      heading,
-      latitude,
-      longitude,
-      speed,
-      timestamp: new Date(+timestamp),
-      UserId,
+    const lastCoordinate = await Coordinate.findOne({
+      where: { UserId: user.id },
+      order: [['createdAt', 'DESC']],
+      limit: 1,
     });
+    console.log(lastCoordinate);
     const familys = await user.getFamilys({ attributes: ['id'], joinTableAttributes: [] });
     const familysId = familys.map((el) => el.id);
     const jsonGeo = JSON.stringify({ type: 'Point', coordinates: [longitude, latitude] });
@@ -54,17 +51,61 @@ module.exports = {
         type: sequelize.QueryTypes.SELECT,
       },
     );
+    const nowLocation = curLoccation.length !== 0 ? curLoccation[0].name : '';
+    if (!lastCoordinate) {
+      Coordinate.create({
+        accuracy,
+        altitude,
+        heading,
+        latitude,
+        longitude,
+        speed,
+        timestamp: new Date(+timestamp),
+        UserId,
+        location: nowLocation,
+      });
+      res.json('success');
+      return;
+    }
+    Coordinate.create({
+      accuracy,
+      altitude,
+      heading,
+      latitude,
+      longitude,
+      speed,
+      timestamp: new Date(+timestamp),
+      UserId,
+      location: nowLocation,
+    });
+    let event = '';
+    if ((!lastCoordinate.location)) {
+      if (nowLocation) {
+        event = `Прибыл в ${nowLocation}`;
+      }
+    } else {
+      if (nowLocation !== lastCoordinate.location) {
+        event = `Убыл из ${lastCoordinate.location} прибыл в ${nowLocation}`;
+      }
+      if (nowLocation === '') {
+        event = `Убыл из ${lastCoordinate.location}`;
+      }
+    }
     const familyUsers = await UsersFamily.findAll({
       where: { familyId: { [Op.in]: familysId } },
       attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('userId')), 'userId']],
       distinct: true,
     });
-    familyUsers.forEach((el) => Event.create({
-        toWhom: el.userId,
-        user: user.id,
-        timestamp: new Date(+timestamp),
-        location: curLoccation[0].name,
-      }),);
+    familyUsers.forEach((el) => {
+      if (event) {
+        Event.create({
+          toWhom: el.userId,
+          user: user.id,
+          timestamp: new Date(+timestamp),
+          event,
+        });
+      }
+    });
     res.json(curLoccation);
   },
   async getLocations(req, res) {

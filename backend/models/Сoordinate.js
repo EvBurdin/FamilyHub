@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       speed: {
         type: DataTypes.DECIMAL(10, 2),
       },
-
+      location: {
+        type: DataTypes.STRING,
+      },
       timestamp: {
         type: DataTypes.DATE,
       },
