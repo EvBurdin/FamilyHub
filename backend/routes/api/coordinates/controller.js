@@ -1,6 +1,13 @@
 const io = require('socket.io');
 const {
- Coordinate, Location, Sequelize, sequelize 
+  Coordinate, //
+  Location,
+  Sequelize,
+  sequelize,
+  Family,
+  User,
+  UsersFamily,
+  Event,
 } = require('../../../models/Index');
 
 const { Op } = Sequelize;
@@ -47,7 +54,19 @@ module.exports = {
         type: sequelize.QueryTypes.SELECT,
       },
     );
-    global.io.sockets.emit('hi', 'everyone');
+    const familyUsers = await UsersFamily.findAll({
+      where: { familyId: { [Op.in]: familysId } },
+      attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('userId')), 'userId']],
+      distinct: true,
+    });
+    familyUsers.forEach((el) => Event.create({
+        toWhom: el.userId,
+        user: user.id,
+        timestamp: new Date(+timestamp),
+        location: curLoccation[0].name,
+      }),);
+    console.log(familyUsers);
+
     res.json(curLoccation);
   },
   async getLocations(req, res) {

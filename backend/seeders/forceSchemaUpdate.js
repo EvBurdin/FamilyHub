@@ -18,6 +18,7 @@ async function forceSchemaUpdate(models) {
   await models.Todo.sync({ alter: true });
   await models.Calendar.sync({ alter: true });
   await models.Location.sync({ alter: true });
+  await models.Event.sync({ alter: true });
   console.log('Seeding successed');
 }
 module.exports = forceSchemaUpdate;
