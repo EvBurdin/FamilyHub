@@ -33,7 +33,6 @@ module.exports = {
       order: [['createdAt', 'DESC']],
       limit: 1,
     });
-    console.log(lastCoordinate);
     const familys = await user.getFamilys({ attributes: ['id'], joinTableAttributes: [] });
     const familysId = familys.map((el) => el.id);
     const jsonGeo = JSON.stringify({ type: 'Point', coordinates: [longitude, latitude] });
@@ -112,7 +111,6 @@ module.exports = {
     const { user } = req;
     const familys = await user.getFamilys({ attributes: ['id'], joinTableAttributes: [] });
     const familysId = familys.map((el) => el.id);
-    console.log(familysId);
 
     const locations = await Location.findAll({ where: { FamilyId: { [Op.in]: familysId } } });
 
