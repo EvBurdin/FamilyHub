@@ -21,22 +21,31 @@ export const getEvents = (cookies) => async (dispatch) => {
     const data = await response.json();
     // console.log(data);
     const calendars = data[0].Calendars;
-    // console.log('calendars',calendars);
+    console.log('calendars', calendars);
     const selected = calendars.map((date) => date.dateStart.substr(0, 10));
     // console.log('selected ----------',selected);
     const selectedObj = {};
     selected.forEach((element) => {
       selectedObj[element] = { color: 'green' };
     });
-    console.log('selectedObj--------', selectedObj);
-    
-    dispatch({ type: GET_EVENT, payload: selectedObj });
+    const selectedCalendars = {};
+    calendars.forEach((element) => {
+      selectedCalendars[element.dateStart.substr(0, 10)] = {
+        id: element.id,
+        title: element.title,
+        text: element.text,
+      };
+    });
+    // console.log('selectedObj--------', selectedObj);
+    console.log('selectedCalendars--------', selectedCalendars);
+
+    dispatch({ type: GET_EVENT, payload: { selectedObj, selectedCalendars } });
   } catch (err) {
     console.log(err);
   }
 };
 
-export const addEvent = (cookies,event) => async (dispatch) => {
+export const addEvent = (cookies, event) => async (dispatch) => {
   try {
     const response = await fetch('http://134.209.82.36:3000/api/user/calendar', {
       method: 'POST',

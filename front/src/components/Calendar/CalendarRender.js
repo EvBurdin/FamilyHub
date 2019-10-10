@@ -20,6 +20,8 @@ class CalendarRender extends React.Component {
       dateEnd: '',
       periodic: false,
       period: '',
+      dayEventTitle: '',
+      dayEventText: '',
     };
   }
 
@@ -37,10 +39,23 @@ class CalendarRender extends React.Component {
   // componentOnMount => actionGet
   pickDate = date => {
     this.setState({ currentDate: date });
+
   };
 
-  showDialog = () => {
-    this.setState({ dialogVisible: true });
+  showDialog = (day) => {
+    console.log('current date', day);
+    
+    const dayEvent = this.props.calendars;
+    
+    this.setState({
+      dialogVisible: true,
+      dayEventTitle: {
+        day: dayEvent.title
+      },
+      dayEventText: {
+        day: dayEvent.text
+      }
+    });
   };
 
   handleCancel = () => {
@@ -101,60 +116,62 @@ class CalendarRender extends React.Component {
           </View>
         </View>
 
-        {!!this.props.selected &&         
-        <CalendarList
-          pastScrollRange={50}
-          futureScrollRange={50}
-          scrollEnabled={true}
-          showScrollIndicator={true}
-          firstDay={1}
-          onDayPress={day => {
-            this.pickDate(day.dateString);
-            this.showDialog();
-          }}
-          onDayLongPress={day => {
-            // this.pickDate(day.dateString);
-            console.log(this.state);
-          }}
-          markedDates={this.props.selected}
-          // '2019-10-20': { textColor: 'green' },
-          // '2019-10-22': { startingDay: true, color: 'green' },
-          // '2019-10-23': { selected: true, endingDay: true, color: 'green', textColor: 'gray' },
-          // '2019-10-04': { disabled: true, startingDay: true, color: 'green', endingDay: true },
+        {!!this.props.selected && (
+          <CalendarList
+            pastScrollRange={50}
+            futureScrollRange={50}
+            scrollEnabled={true}
+            showScrollIndicator={true}
+            firstDay={1}
+            onDayPress={day => {
+              this.pickDate(day.dateString);
+              this.showDialog(day.dateString);
+            }}
+            onDayLongPress={day => {
+              // this.pickDate(day.dateString);
+              console.log(this.state);
+            }}
+            markedDates={this.props.selected}
+            // '2019-10-20': { textColor: 'green' },
+            // '2019-10-22': { startingDay: true, color: 'green' },
+            // '2019-10-23': { selected: true, endingDay: true, color: 'green', textColor: 'gray' },
+            // '2019-10-04': { disabled: true, startingDay: true, color: 'green', endingDay: true },
 
-          markingType={'period'}
-          theme={{
-            backgroundColor: '#ffffff',
-            calendarBackground: '#ffffff',
-            textSectionTitleColor: '#b6c1cd',
-            selectedDayBackgroundColor: '#00adf5',
-            selectedDayTextColor: '#ffffff',
-            todayTextColor: '#00adf5',
-            dayTextColor: '#2d4150',
-            textDisabledColor: '#d9e1e8',
-            dotColor: '#00adf5',
-            selectedDotColor: '#ffffff',
-            arrowColor: 'orange',
-            monthTextColor: 'blue',
-            indicatorColor: 'blue',
-            textDayFontFamily: 'monospace',
-            textMonthFontFamily: 'monospace',
-            textDayHeaderFontFamily: 'monospace',
-            textDayFontWeight: '300',
-            textMonthFontWeight: 'bold',
-            textDayHeaderFontWeight: '300',
-            textDayFontSize: 16,
-            textMonthFontSize: 16,
-            textDayHeaderFontSize: 16,
-          }}
-        />
-        }
+            markingType={'period'}
+            theme={{
+              backgroundColor: '#ffffff',
+              calendarBackground: '#ffffff',
+              textSectionTitleColor: '#b6c1cd',
+              selectedDayBackgroundColor: '#00adf5',
+              selectedDayTextColor: '#ffffff',
+              todayTextColor: '#00adf5',
+              dayTextColor: '#2d4150',
+              textDisabledColor: '#d9e1e8',
+              dotColor: '#00adf5',
+              selectedDotColor: '#ffffff',
+              arrowColor: 'orange',
+              monthTextColor: 'blue',
+              indicatorColor: 'blue',
+              textDayFontFamily: 'monospace',
+              textMonthFontFamily: 'monospace',
+              textDayHeaderFontFamily: 'monospace',
+              textDayFontWeight: '300',
+              textMonthFontWeight: 'bold',
+              textDayHeaderFontWeight: '300',
+              textDayFontSize: 16,
+              textMonthFontSize: 16,
+              textDayHeaderFontSize: 16,
+            }}
+          />
+        )}
 
         <Dialog.Container visible={this.state.dialogVisible} {...reactNativeModalProps}>
           <Dialog.Title>Whats today?</Dialog.Title>
           {/* <Dialog.Description>
             Add event to calendar
           </Dialog.Description> */}
+          <Dialog.Input>{this.dayEventTitle}</Dialog.Input>
+          <Dialog.Input>{this.dayEventText}</Dialog.Input>
           {/* {this.props.title.map(el => (
             <Dialog.Input>{el}</Dialog.Input>
           ))}
@@ -211,12 +228,7 @@ function mapStateToProps(store) {
     selected: store.Calendar.selected,
     cookies: store.User.cookies,
     familyId: store.User.user.Families[0].id,
-    // title: store.Calendar.title,
-    // text: store.Calendar.text,
-    // currentDate: store.Calendar.currentDate,
-    // dateEnd: store.Calendar.dateEnd,
-    // periodic: store.Calendar.periodic,
-    // period: store.Calendar.period,
+    calendars: store.Calendar.calendars,
   };
 }
 function mapDispatchToProps(dispatch) {
@@ -224,12 +236,6 @@ function mapDispatchToProps(dispatch) {
     getEvents: cookie => dispatch(getEvents(cookie)),
     addEvent: (cookie,event) => dispatch(addEvent(cookie,event)),
     deleteEvent: (cookie,id) => dispatch(deleteEvent(cookie,id)),
-    // handleOk: 
-    // onChangeTitle: (title) => dispatch(onChangeTitle(title)),
-    // onChangeText: (text) => dispatch(onChangeText(text)),
-    // pickDate: date => dispatch(pickDate(date)),
-    // handleDelete: () => dispatch(handleDelete()),
-    // handleOk: () => dispatch(handleOk()),
   };
 }
 

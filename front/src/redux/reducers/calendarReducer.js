@@ -14,6 +14,7 @@ const initState = {
   periodic: false,
   period: '',
   selected: {},
+  calendars: '',
 };
 
 export default function reducer(state = initState, action) {
@@ -25,11 +26,14 @@ export default function reducer(state = initState, action) {
         currentDate: action.payload.currentDate,
       };
     case GET_EVENT:
-      return { ...state, selected: {
-        ...state.selected, 
-        ...action.payload
-      } 
-    };
+      return {
+        ...state,
+        selected: {
+          ...state.selected,
+          ...action.payload.selectedObj,
+        },
+        calendars: action.payload.selectedCalendars,
+      };
     case DELETE_EVENT:
       return { ...state, cookies: action.payload };
     case UPDATE_EVENT:
