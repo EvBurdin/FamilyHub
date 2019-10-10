@@ -27,10 +27,17 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "ru.broteam.familyhub",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAkXFcmRNNIWVF41oAqeePDQnPHaA-CXDA"
+        }
+      },
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
       ]
-    }
+    },
+    "description": ""
   }
 }

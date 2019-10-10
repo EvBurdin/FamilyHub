@@ -5,9 +5,8 @@ import Dialog from 'react-native-dialog';
 import { connect } from 'react-redux';
 import { CheckBox } from 'react-native-elements';
 import RadioGroup from 'react-native-radio-button-group';
-import CalendarElement from './CalendarElement/CalendarElement.js'
+import CalendarElement from './CalendarElement/CalendarElement.js';
 import { getEvents, addEvent, updateEvent, deleteEvent } from '../../redux/actions/calendarActions';
-
 
 class CalendarRender extends React.Component {
   constructor(props) {
@@ -29,7 +28,6 @@ class CalendarRender extends React.Component {
     this.props.getEvents(this.props.cookies);
   }
 
-
   // componentDidUpdate(prevProps, prevState) {
   //   if (prevState.dialogVisible && !this.state.dialogVisible) {
   //     this.props.getEvents(this.props.cookies);
@@ -39,17 +37,16 @@ class CalendarRender extends React.Component {
   // componentOnMount => actionGet
   pickDate = date => {
     this.setState({ currentDate: date });
-
   };
 
-  showDialog = (day) => {
+  showDialog = day => {
     console.log('current date', day);
-    
+
     const dayEvents = this.props.calendars[day];
-    console.log('===================================before:\n ',JSON.stringify(dayEvents))
+    console.log('===================================before:\n ', JSON.stringify(dayEvents));
     this.setState({
       dialogVisible: true,
-      dayEvents
+      dayEvents,
     });
   };
 
@@ -68,19 +65,18 @@ class CalendarRender extends React.Component {
       dateEnd: this.state.currentDate,
       familyId: this.props.familyId,
       periodic: this.state.periodic,
-      period: this.state.period
-    }
+      period: this.state.period,
+    };
     this.setState({
       dialogVisible: false,
     });
-    this.props.addEvent(this.props.cookies,event);
+    this.props.addEvent(this.props.cookies, event);
   };
 
   handleDelete = () => {
     this.setState({
       dialogVisible: false,
     });
-    
   };
 
   onChangeTitle = title => {
@@ -99,12 +95,12 @@ class CalendarRender extends React.Component {
       onBackdropPress: this.handleCancel,
     };
     const radiogroup_options = [{ id: '0', label: 'week' }, { id: '1', label: 'month' }, { id: '2', label: 'year' }];
- 
-      const marked = { ...this.props.selected };
 
-      console.log('render');
-      console.log ('=========================This.props.selected:\n',JSON.stringify(this.props.selected))
-      console.log('=========================This.props.calendar:\n', JSON.stringify(this.props.calendars));
+    const marked = { ...this.props.selected };
+
+    console.log('render');
+    console.log('=========================This.props.selected:\n', JSON.stringify(this.props.selected));
+    console.log('=========================This.props.calendar:\n', JSON.stringify(this.props.calendars));
     return (
       <View>
         <View style={{ height: 150, backgroundColor: 'transparent', justifyContent: 'center' }}>
@@ -130,7 +126,6 @@ class CalendarRender extends React.Component {
             onDayLongPress={day => {
               // console.log(this.state);
             }}
-            
             markedDates={marked}
             // '2019-10-20': { textColor: 'green' },
             // '2019-10-22': { startingDay: true, color: 'green' },
@@ -172,11 +167,17 @@ class CalendarRender extends React.Component {
           </Dialog.Description> */}
           {console.log('dayEvents: ', JSON.stringify(this.state.dayEvents))}
           {!!this.state.dayEvents &&
-            this.state.dayEvents.map((el,index) => {
+            this.state.dayEvents.map((el, index) => {
               console.log('draw');
               return (
                 //
-                <CalendarElement key={index} title={el.title} text={el.text} id={el.id} handleDelete={this.handleDelete} />
+                <CalendarElement
+                  key={index}
+                  title={el.title}
+                  text={el.text}
+                  id={el.id}
+                  handleDelete={this.handleDelete}
+                />
               );
             })}
 
@@ -216,7 +217,7 @@ class CalendarRender extends React.Component {
             />
           )}
           <Dialog.Button
-            label="Delete"
+            label="Cancel"
             onPress={this.handleDelete}
             style={{ backgroundColor: '#DB514E', borderRadius: 5, color: 'white', width: 70 }}
           />
@@ -242,8 +243,8 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
   return {
     getEvents: cookie => dispatch(getEvents(cookie)),
-    addEvent: (cookie,event) => dispatch(addEvent(cookie,event)),
-    deleteEvent: (cookie,id) => dispatch(deleteEvent(cookie,id)),
+    addEvent: (cookie, event) => dispatch(addEvent(cookie, event)),
+    deleteEvent: (cookie, id) => dispatch(deleteEvent(cookie, id)),
   };
 }
 
@@ -251,5 +252,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(CalendarRender);
-
-
