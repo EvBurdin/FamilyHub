@@ -1,22 +1,21 @@
-import { GET_CHECK_ZONES, ADD_CHECKPOINT } from '../actionNames/AddNewZoneActionNames';
+import { GET_ALL_CHECKPOINTS, ADD_CHECKPOINT } from '../actionNames/AddNewZoneActionNames';
 
 const initialState = {
   checkpoints: [
-    {
-      accuracy: 23,
-      altitude: 169.20001220703125,
-      heading: 96.78195190429688,
-      latitude: 55.7088312,
-      longitude: 37.5933578,
-      speed: 0.07753844559192657,
-      timestamp: 1570708943817,
-    },
+    // {
+    //   cookies: 's:r_iPcn9cRFR7xSInWrukHI7ki7MMTSGR.Fr6PKw8PBXf1ETc9t3bV7h9KrdnJjfp8Y9Ga4TgtuLM',
+    //   description: 'скорее',
+    //   familyId: 1,
+    //   latitude: 55.71320451996077,
+    //   longitude: 37.598099894821644,
+    //   name: 'план',
+    // },
   ],
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_CHECK_ZONES: {
+    case GET_ALL_CHECKPOINTS: {
       return {
         ...state,
         checkpoints: action.payload,

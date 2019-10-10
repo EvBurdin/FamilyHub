@@ -12,7 +12,7 @@ import {
 import { Button, CheckBox, Overlay, Input, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { ToastAndroid } from 'react-native';
-import { addNewCheckpoint } from '../redux/actions/AddNewZoneActions';
+import { addNewCheckpoint, getAllCheckpoints } from '../redux/actions/AddNewZoneActions';
 import { pickCoordinate } from '../redux/actions/mapActions';
 import ModalMap from '../components/map/MapAddCoordinate';
 
@@ -24,7 +24,7 @@ class AddNewZone extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props.checkpoints);
+    this.props.getAllCheckpoints(this.props.cookies);
   }
 
   open = () => {
@@ -59,15 +59,33 @@ class AddNewZone extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.container}>
-          {!!this.props.checkpoints &&
-            this.props.checkpoints.map(el => {
-              <TouchableOpacity
-                style={[styles.buttonContainer, styles.loginButton]}
-                onPress={() => this.pickLocation()}
-              >
-                <Text style={styles.loginText}>{el.name}</Text>
-                <Text style={styles.loginText}>{el.description}</Text>
-              </TouchableOpacity>;
+          {this.props.checkpoints.length !== 0 &&
+            this.props.checkpoints.map((el, index) => {
+              return (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <TouchableOpacity
+                    key={index + el.name + el.description}
+                    style={[styles.buttonContainer, styles.loginButton]}
+                    onPress={() => this.pickLocation()}
+                  >
+                    <Text style={styles.loginText}>{el.name}</Text>
+                    <Text style={styles.loginText}>{el.description}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    key={index + el.name + el.description + 1}
+                    style={[styles.delButtonContainer, styles.loginButton]}
+                    onPress={() => this.pickLocation()}
+                  >
+                    <Text style={styles.loginText}>X</Text>
+                  </TouchableOpacity>
+                </View>
+              );
             })}
           <Overlay
             style={{ zIndex: 5 }}
@@ -150,6 +168,8 @@ function mapDispatchToProps(dispatch) {
   return {
     pickCoordinate: coordinates => dispatch(pickCoordinate(coordinates)),
     addNewCheckpoint: (cookies, text) => dispatch(addNewCheckpoint(cookies, text)),
+    getAllCheckpoints: cookies => dispatch(getAllCheckpoints(cookies)),
+
     // editInput: text => dispatch(editInput(text)),
     // saveTask: () => dispatch(saveTask()),
     // checkTask: (title, checkedBool, i, id, cookie) => dispatch(checkTask(title,checkedBool, i, id, cookie)),
@@ -203,6 +223,18 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     width: 250,
     borderRadius: 5,
+  },
+  delButtonContainer: {
+    zIndex: 5,
+    height: 45,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+    marginLeft: 10,
+    width: 45,
+    borderRadius: 5,
+    backgroundColor: 'red',
   },
   loginButton: {
     backgroundColor: '#00b5ec',

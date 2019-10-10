@@ -1,4 +1,4 @@
-import { GET_CHECK_ZONES, ADD_CHECKPOINT } from '../actionNames/AddNewZoneActionNames';
+import { GET_ALL_CHECKPOINTS, ADD_CHECKPOINT } from '../actionNames/AddNewZoneActionNames';
 
 export const addNewCheckpoint = (data) => async (dispatch) => {
   console.log(data);
@@ -25,8 +25,28 @@ export const addNewCheckpoint = (data) => async (dispatch) => {
       }),
     });
     const myJson = await response.json();
-    console.log(myJson);
+    // console.log(myJson);
     dispatch({ type: ADD_CHECKPOINT, payload: data });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getAllCheckpoints = (cookies) => async (dispatch) => {
+  try {
+    const response = await fetch('http://134.209.82.36:3000/api/coordinates/location', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Cache: 'no-cache',
+        credentials: 'same-origin',
+        Cookie: `connect.sid=${cookies}`,
+      },
+    });
+    const myJson = await response.json();
+    console.log(myJson);
+    dispatch({ type: GET_ALL_CHECKPOINTS, payload: myJson });
   } catch (e) {
     console.log(e);
   }
