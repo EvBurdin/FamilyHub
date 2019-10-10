@@ -6,7 +6,7 @@ const router = express.Router();
 const controller = require('./controller');
 
 router.post('/registration', controller.userRegister);
-router.post('/login',controller.sessionLoger, passport.authenticate('local'), controller.userLogin);
+router.post('/login', passport.authenticate('local'), controller.userLogin);
 router.get('/logged', controller.cookieLoger, auth, controller.getCurrentUser);
 // строчка чтоб обновить токены
 // { accessType: 'offline', prompt: 'consent' }
