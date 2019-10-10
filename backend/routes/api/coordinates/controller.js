@@ -78,7 +78,7 @@ module.exports = {
       location: nowLocation,
     });
     let event = '';
-    if ((!lastCoordinate.location)) {
+    if (!lastCoordinate.location) {
       if (nowLocation) {
         event = `Прибыл в ${nowLocation}`;
       }
@@ -135,5 +135,12 @@ module.exports = {
     });
 
     res.json('Success');
+  },
+  async deleteLocation(req, res) {
+    const { id } = req.body;
+    await Location.destroy({
+      where: { id },
+    });
+    res.json('success');
   },
 };

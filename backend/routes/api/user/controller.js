@@ -32,8 +32,8 @@ module.exports = {
   async addTodo(req, res) {
     const { user } = req;
     const { goal, familyId: FamilyId } = req.body;
-    await Todo.create({ goal, FamilyId, author: user.id });
-    res.json('success');
+    const todo = await Todo.create({ goal, FamilyId, author: user.id });
+    res.json(todo);
   },
   async updateTodo(req, res) {
     const { id, goal, active } = req.body;

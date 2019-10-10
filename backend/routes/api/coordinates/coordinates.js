@@ -11,6 +11,7 @@ router
 router
   .route('/location')
   .get(auth, controller.getLocations)
-  .post(auth, controller.setLocation);
+  .post(auth, controller.setLocation)
+  .delete(auth, controller.deleteLocation);
 
 module.exports = router;
