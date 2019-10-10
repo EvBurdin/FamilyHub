@@ -53,7 +53,7 @@ module.exports = {
   },
   sessionLoger(req, res, next) {
     console.log(chalk.blue(JSON.stringify(req.session)));
-    req.session.regenerate(e=>{});
+    req.session.destroy();
     console.log(chalk.red(JSON.stringify(req.session)));
     next();
   },
