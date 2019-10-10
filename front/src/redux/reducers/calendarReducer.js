@@ -29,7 +29,6 @@ export default function reducer(state = initState, action) {
       return {
         ...state,
         selected: {
-          ...state.selected,
           ...action.payload.selectedObj,
         },
         calendars: action.payload.selectedCalendars,

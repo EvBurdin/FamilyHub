@@ -11,20 +11,18 @@ class FamilyCreateJoin extends Component {
   };
 
   familyCreate = async () => {
-    const response = await fetch('http://134.209.82.36.nip.io:3000/api/family', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Cache: 'no-cache',
-        credentials: 'same-origin',
-        Cookie: `connect.sid=${this.props.cookies}`,
-      },
-      body: JSON.stringify({ familyName: this.state.familyName }),
-    });
-    console.log(response);
-
     try {
+      const response = await fetch('http://134.209.82.36.nip.io:3000/api/family', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Cache: 'no-cache',
+          credentials: 'same-origin',
+          Cookie: `connect.sid=${this.props.cookies}`,
+        },
+        body: JSON.stringify({ familyName: this.state.familyName }),
+      });
       ToastAndroid.showWithGravityAndOffset(
         'Family successfully created',
         ToastAndroid.SHORT,
@@ -47,20 +45,20 @@ class FamilyCreateJoin extends Component {
   };
 
   familyJoin = async () => {
-    console.log('JOIN');
-    console.log(JSON.stringify({ id: this.state.familyID }));
-    const response = await fetch('http://134.209.82.36.nip.io:3000/api/user/family', {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Cache: 'no-cache',
-        credentials: 'same-origin',
-        Cookie: `connect.sid=${this.props.cookies}`,
-      },
-      body: JSON.stringify({ id: this.state.familyID }),
-    });
     try {
+      console.log(JSON.stringify({ id: this.state.familyID }));
+      const response = await fetch('http://134.209.82.36.nip.io:3000/api/user/family', {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Cache: 'no-cache',
+          credentials: 'same-origin',
+          Cookie: `connect.sid=${this.props.cookies}`,
+        },
+        body: JSON.stringify({ id: this.state.familyID }),
+      });
+
       ToastAndroid.showWithGravityAndOffset(
         'You are successfully added to the family',
         ToastAndroid.SHORT,

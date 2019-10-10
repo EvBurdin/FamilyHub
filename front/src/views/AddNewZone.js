@@ -9,10 +9,10 @@ import {
   TouchableHighlight,
   ScrollView,
 } from 'react-native';
-import { Button, CheckBox, Overlay, Input, Text } from 'react-native-elements';
+import { Button, CheckBox, Overlay, ListItem, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { ToastAndroid } from 'react-native';
-import { addNewCheckpoint, getAllCheckpoints } from '../redux/actions/AddNewZoneActions';
+import { addNewCheckpoint, getAllCheckpoints, dellCheckpoints } from '../redux/actions/AddNewZoneActions';
 import { pickCoordinate } from '../redux/actions/mapActions';
 import ModalMap from '../components/map/MapAddCoordinate';
 
@@ -59,30 +59,38 @@ class AddNewZone extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.container}>
-          {this.props.checkpoints.length !== 0 &&
+          {!!this.props.checkpoints &&
             this.props.checkpoints.map((el, index) => {
               return (
                 <View
+                  key={index + el.name + el.description}
                   style={{
                     flexDirection: 'row',
-                    justifyContent: 'center',
+                    justifyContent: 'flex-start',
                     alignItems: 'center',
                   }}
                 >
+                  {/* <ListItem key={'sdfsdfsd'} title={'zczxcxzczxcxzc'} subtitle={'el.description'} bottomDivider />
+                  <ListItem
+                    key={index + el.name + el.description + 1}
+                    title={el.name}
+                    subtitle={el.description}
+                    bottomDivider
+                  /> */}
                   <TouchableOpacity
                     key={index + el.name + el.description}
                     style={[styles.buttonContainer, styles.loginButton]}
                     onPress={() => this.pickLocation()}
                   >
-                    <Text style={styles.loginText}>{el.name}</Text>
+                    <Text style={styles.loginTextH}>{el.name}</Text>
                     <Text style={styles.loginText}>{el.description}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     key={index + el.name + el.description + 1}
-                    style={[styles.delButtonContainer, styles.loginButton]}
-                    onPress={() => this.pickLocation()}
+                    style={[styles.delButtonContainer]}
+                    onPress={() => this.props.dellCheckpoints(this.props.cookies, el.id, this.props.checkpoints)}
                   >
-                    <Text style={styles.loginText}>X</Text>
+                    <Text style={styles.delText}>X</Text>
                   </TouchableOpacity>
                 </View>
               );
@@ -169,7 +177,7 @@ function mapDispatchToProps(dispatch) {
     pickCoordinate: coordinates => dispatch(pickCoordinate(coordinates)),
     addNewCheckpoint: (cookies, text) => dispatch(addNewCheckpoint(cookies, text)),
     getAllCheckpoints: cookies => dispatch(getAllCheckpoints(cookies)),
-
+    dellCheckpoints: (cookies, id, arr) => dispatch(dellCheckpoints(cookies, id, arr)),
     // editInput: text => dispatch(editInput(text)),
     // saveTask: () => dispatch(saveTask()),
     // checkTask: (title, checkedBool, i, id, cookie) => dispatch(checkTask(title,checkedBool, i, id, cookie)),
@@ -186,32 +194,27 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight + 10,
+    marginTop: Constants.statusBarHeight + 15,
   },
   modalContainer: {
     flex: 1,
     marginTop: 10,
     paddingLeft: 20,
   },
-  optionsTitleText: {
-    fontSize: 16,
-    marginLeft: 15,
-    marginTop: 9,
-    marginBottom: 12,
-  },
-  optionIconContainer: {
-    marginRight: 9,
-  },
-  option: {
-    backgroundColor: '#fdfdfd',
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#EDEDED',
-  },
-  optionText: {
+  loginTextH: {
+    color: 'white',
     fontSize: 15,
-    marginTop: 1,
+    fontWeight: '600',
+  },
+  loginText: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: '300',
+  },
+  delText: {
+    color: '#F96F6F',
+    fontSize: 25,
+    fontWeight: '900',
   },
   buttonContainer: {
     zIndex: 5,
@@ -234,7 +237,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     width: 45,
     borderRadius: 5,
-    backgroundColor: 'red',
+    borderColor: '#F96F6F',
+    borderWidth: 3,
+    // backgroundColor: 'red',
   },
   loginButton: {
     backgroundColor: '#00b5ec',

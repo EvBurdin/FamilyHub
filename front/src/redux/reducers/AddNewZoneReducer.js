@@ -18,7 +18,7 @@ export default function (state = initialState, action) {
     case GET_ALL_CHECKPOINTS: {
       return {
         ...state,
-        checkpoints: action.payload,
+        checkpoints: [...action.payload],
       };
     }
     case ADD_CHECKPOINT: {
