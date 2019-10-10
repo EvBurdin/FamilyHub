@@ -12,7 +12,7 @@ export const getFamilyLocations = (cookies) => async (dispatch) => {
     },
   });
   const myJson = await response.json();
-  console.log(myJson);
+  // console.log(myJson);
   const data = [];
   for (let i = 0; i < myJson[0].Users.length; i++) {
     data.push(myJson[0].Users[i].Coordinates);

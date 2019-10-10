@@ -5,6 +5,7 @@ import {
  View, StyleSheet, ScrollView, Button, SafeAreaView, Dimensions 
 } from 'react-native';
 import Main from './views/main';
+import Calendar from './views/Calendar';
 import showMap from './views/map';
 import Login from './views/login';
 import Logout from './views/logout';
@@ -23,6 +24,7 @@ const drawerNavigator = createDrawerNavigator(
     showMap,
     AddNewZone,
     Logout,
+    Calendar,
   },
   {
     contentComponent: CustomDrawerComponent,
@@ -40,4 +42,7 @@ export default createSwitchNavigator(
   {
     initialRouteName: 'Login',
   },
+  // Calendar: {
+  //   screen: Calendar,
+  // },
 );
