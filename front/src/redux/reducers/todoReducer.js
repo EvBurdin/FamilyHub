@@ -104,11 +104,12 @@ export default function (state = initialState, action) {
         // adding new task (first task) - empty array && not editing task ID
         return {
           ...state,
-          // list: [{ goal: state.newTaskTitle, active: false }],
+          list: [{ goal: state.newTaskTitle, active: true }],
           newTaskTitle: '',
           editTaskID: -1,
           currentCheck: undefined,
           isVisibleNewTask: false,
+          returnedFromDBTaskID: action.IDtask,
         };
       }
       return { ...state, isVisibleNewTask: false };

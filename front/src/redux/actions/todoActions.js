@@ -58,7 +58,8 @@ export const saveTaskNew = (todoLen, title, check, taskID, famID, cookies) => as
   }
 
   //------------------------------------------------------------------------------
-  if (todoLen && title.length && !(taskID >= 0)) {
+  // if (todoLen && title.length && !(taskID >= 0)) {
+  if (title.length && !(taskID >= 0)) {
     // (state.list.length && state.newTaskTitle.length && !(state.editTaskID >= 0))
     // adding new task - not empty array && there is a new text && not editing task ID
     try {
