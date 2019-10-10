@@ -144,7 +144,6 @@ module.exports = {
     } else {
       await Calendar.destroy({ where: { id } });
     }
-    calendar.save();
     res.json('success');
   },
   async getUserInfo(req, res) {
