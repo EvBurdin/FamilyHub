@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TouchableHighlight, ScrollView } from 'react-native';
-import { Button, CheckBox, Overlay, Input, Text } from 'react-native-elements';
+import { Button, CheckBox, Overlay, Input } from 'react-native-elements';
 import { connect } from 'react-redux';
 import {
   showModal,
@@ -19,8 +19,14 @@ class ToDoList extends Component {
     this.familyToDoFetch();
   }
 
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.list.length < this.props.list.length) {
+  //     this.familyToDoFetch();
+  //   }
+  // }
+
   async familyToDoFetch() {
-    const someVariable = await this.props.getFamilyToDo(this.props.cookies);
+    const somePromise = await this.props.getFamilyToDo(this.props.cookies);
   }
 
   render() {
@@ -28,27 +34,37 @@ class ToDoList extends Component {
       <View style={{ flex: 1, flexDirection: 'column', marginTop: 30 }}>
         <TouchableHighlight underlayColor="white">
           <ScrollView>
-            {this.props.list.map((item, i) => (
-              <View key={i} style={{ flex: 1, justifyContent: 'flex-end' }}>
-                <CheckBox
-                  key={item.id}
-                  title={item.goal + ' id:' + item.id}
-                  checked={item.active}
-                  onIconPress={() => {
-                    this.props.checkTask(item.goal, item.active, i, item.id, this.props.cookies);
-                  }}
-                  onLongPress={() => this.props.delTask(i)}
-                  onPress={() => {
-                    this.props.showModal(true, i, item.id);
-                  }}
-                />
-              </View>
-            ))}
+            {this.props.list
+              .map((item, i) => (
+                <View key={i} style={{ flex: 1, justifyContent: 'flex-end' }}>
+                  <CheckBox
+                    key={item.id}
+                    title={item.goal}
+                    checked={item.active}
+                    onIconPress={() => {
+                      this.props.checkTask(
+                        item.goal,
+                        item.active,
+                        i,
+                        item.id || this.props.returnedFromDBTaskID,
+                        this.props.cookies,
+                      );
+                    }}
+                    onLongPress={() =>
+                      this.props.delTask(i, item.id || this.props.returnedFromDBTaskID, this.props.cookies)
+                    }
+                    onPress={() => {
+                      this.props.showModal(true, i, item.id || this.props.returnedFromDBTaskID);
+                    }}
+                  />
+                </View>
+              ))
+              .sort((a, b) => a.key - b.key)}
+            <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+              <Button onPress={() => this.props.showModal(true, -1)} title="Create new task" color="#841584" />
+            </View>
           </ScrollView>
         </TouchableHighlight>
-        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-          <Button onPress={() => this.props.showModal(true, -1)} title="Create new task" color="#841584" />
-        </View>
         <View>
           <Overlay
             height="auto"
@@ -64,6 +80,7 @@ class ToDoList extends Component {
                     this.props.newTaskTitle,
                     this.props.currentCheck,
                     this.props.currentTaskIDInDB,
+                    this.props.curFamilyID,
                     this.props.cookies,
                   )
                 }
@@ -88,6 +105,7 @@ function mapStateToProps(state) {
     curFamilyID: state.ToDoList.currentFamilyID,
     currentCheck: state.ToDoList.currentCheck,
     currentTaskIDInDB: state.ToDoList.currentTaskIDInDB,
+    returnedFromDBTaskID: state.ToDoList.returnedFromDBTaskID,
   };
 }
 
@@ -97,10 +115,10 @@ function mapDispatchToProps(dispatch) {
     editInput: text => dispatch(editInput(text)),
     saveTask: () => dispatch(saveTask()),
     checkTask: (title, checkedBool, i, id, cookie) => dispatch(checkTask(title, checkedBool, i, id, cookie)),
-    delTask: i => dispatch(delTask(i)),
+    delTask: (i, taskID, cookie) => dispatch(delTask(i, taskID, cookie)),
     getFamilyToDo: cookie => dispatch(getFamilyToDo(cookie)),
-    saveTaskNew: (todoLength, title, checkedBool, taskID, cookie) =>
-      dispatch(saveTaskNew(todoLength, title, checkedBool, taskID, cookie)),
+    saveTaskNew: (todoLength, title, checkedBool, taskID, curFamID, cookie) =>
+      dispatch(saveTaskNew(todoLength, title, checkedBool, taskID, curFamID, cookie)),
   };
 }
 
