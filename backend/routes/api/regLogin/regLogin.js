@@ -14,7 +14,7 @@ router.get('/logged', auth, controller.getCurrentUser);
 router.get(
   '/login/google',
   (req, res, next) => {
-    console.log(chalk.green(req.cookies));
+    console.log(chalk.green(JSON.stringify(req.cookies)));
     next();
   },
   passport.authenticate('google', { accessType: 'offline', prompt: 'consent' }),
