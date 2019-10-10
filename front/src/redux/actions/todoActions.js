@@ -1,6 +1,11 @@
 import {
- SHOW_MODAL, EDIT_INPUT, SAVE_TASK, CHECK_TASK, DEL_TASK, GET_FAMILY_TODOS 
-} from '../actionNames/todoTypes';
+  SHOW_MODAL,
+  EDIT_INPUT,
+  SAVE_TASK,
+  CHECK_TASK,
+  DEL_TASK,
+  GET_FAMILY_TODOS,
+} from '../actionNames/ToDoActionNames';
 
 export const showModal = (needToShow, i, currID) => (dispatch) => {
   dispatch({

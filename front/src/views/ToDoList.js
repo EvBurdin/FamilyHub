@@ -97,15 +97,15 @@ class ToDoList extends Component {
 function mapStateToProps(state) {
   // console.log(state);
   return {
-    list: state.ToDoList.list,
-    newTaskTitle: state.ToDoList.newTaskTitle,
-    isVisibleNewTask: state.ToDoList.isVisibleNewTask,
-    editTaskID: state.ToDoList.editTaskID,
+    list: state.ToDo.list,
+    newTaskTitle: state.ToDo.newTaskTitle,
+    isVisibleNewTask: state.ToDo.isVisibleNewTask,
+    editTaskID: state.ToDo.editTaskID,
     cookies: state.User.cookies,
-    curFamilyID: state.ToDoList.currentFamilyID,
-    currentCheck: state.ToDoList.currentCheck,
-    currentTaskIDInDB: state.ToDoList.currentTaskIDInDB,
-    returnedFromDBTaskID: state.ToDoList.returnedFromDBTaskID,
+    curFamilyID: state.ToDo.currentFamilyID,
+    currentCheck: state.ToDo.currentCheck,
+    currentTaskIDInDB: state.ToDo.currentTaskIDInDB,
+    returnedFromDBTaskID: state.ToDo.returnedFromDBTaskID,
   };
 }
 

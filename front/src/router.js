@@ -11,6 +11,7 @@ import Login from './views/login';
 import Logout from './views/logout';
 import AddNewZone from './views/AddNewZone';
 import FamilyCreateJoin from './views/familyCreateJoin';
+import ToDo from './views/ToDoList';
 
 const CustomDrawerComponent = (props) => (
   <ScrollView style={{ marginTop: 30 }}>
@@ -23,8 +24,9 @@ const drawerNavigator = createDrawerNavigator(
     Main,
     showMap,
     AddNewZone,
-    Logout,
+    ToDo,
     Calendar,
+    Logout,
   },
   {
     contentComponent: CustomDrawerComponent,
