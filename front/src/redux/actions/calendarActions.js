@@ -21,23 +21,26 @@ export const getEvents = (cookies) => async (dispatch) => {
     const data = await response.json();
     // console.log(data);
     const calendars = data[0].Calendars;
-    console.log('calendars', calendars);
+    console.log('calendars--------------------\n', calendars);
     const selected = calendars.map((date) => date.dateStart.substr(0, 10));
     // console.log('selected ----------',selected);
     const selectedObj = {};
     selected.forEach((element) => {
-      selectedObj[element] = { color: 'green' };
+      selectedObj[element] = { color: 'limegreen' };
     });
     const selectedCalendars = {};
     calendars.forEach((element) => {
-      selectedCalendars[element.dateStart.substr(0, 10)] = {
+      if (!selectedCalendars[element.dateStart.substr(0, 10)]) {
+        selectedCalendars[element.dateStart.substr(0, 10)] = [];
+      }
+      selectedCalendars[element.dateStart.substr(0, 10)].push({
         id: element.id,
         title: element.title,
         text: element.text,
-      };
+      });
     });
     // console.log('selectedObj--------', selectedObj);
-    console.log('selectedCalendars--------', selectedCalendars);
+    console.log('selectedCalendars--------\n', selectedCalendars);
 
     dispatch({ type: GET_EVENT, payload: { selectedObj, selectedCalendars } });
   } catch (err) {
@@ -58,19 +61,18 @@ export const addEvent = (cookies, event) => async (dispatch) => {
         Cookie: `connect.sid=${cookies}`,
       },
     });
-
+    getEvents(cookies)(dispatch);
     // dispatch({ type: ADD_EVENT, payload: data });
   } catch (err) {
     console.log(err);
   }
-  getEvents();
 };
 
-export const deleteEvent = (cookies,id) => async (dispatch) => {
+export const deleteEvent = (cookies, id) => async (dispatch) => {
   try {
     const response = await fetch('http://134.209.82.36:3000/api/user/calendar', {
       method: 'DELETE',
-      body: JSON.stringify(id),
+      body: JSON.stringify({ id }),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -81,6 +83,7 @@ export const deleteEvent = (cookies,id) => async (dispatch) => {
     });
     // const data = await response.json();
     // dispatch({ type: DELETE_EVENT, payload: data });
+    getEvents(cookies)(dispatch);
   } catch (err) {
     console.log(err);
   }

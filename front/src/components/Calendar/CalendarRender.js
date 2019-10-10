@@ -5,7 +5,7 @@ import Dialog from 'react-native-dialog';
 import { connect } from 'react-redux';
 import { CheckBox } from 'react-native-elements';
 import RadioGroup from 'react-native-radio-button-group';
-
+import CalendarElement from './CalendarElement/CalendarElement.js'
 import { getEvents, addEvent, updateEvent, deleteEvent } from '../../redux/actions/calendarActions';
 
 
@@ -30,11 +30,11 @@ class CalendarRender extends React.Component {
   }
 
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.dialogVisible && !this.state.dialogVisible) {
-      this.props.getEvents(this.props.cookies);
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevState.dialogVisible && !this.state.dialogVisible) {
+  //     this.props.getEvents(this.props.cookies);
+  //   }
+  // }
 
   // componentOnMount => actionGet
   pickDate = date => {
@@ -45,16 +45,11 @@ class CalendarRender extends React.Component {
   showDialog = (day) => {
     console.log('current date', day);
     
-    const dayEvent = this.props.calendars;
-    
+    const dayEvents = this.props.calendars[day];
+    console.log('before: ',JSON.stringify(dayEvents))
     this.setState({
       dialogVisible: true,
-      dayEventTitle: {
-        day: dayEvent.title
-      },
-      dayEventText: {
-        day: dayEvent.text
-      }
+      dayEvents
     });
   };
 
@@ -104,7 +99,12 @@ class CalendarRender extends React.Component {
       onBackdropPress: this.handleCancel,
     };
     const radiogroup_options = [{ id: '0', label: 'week' }, { id: '1', label: 'month' }, { id: '2', label: 'year' }];
+ 
+      const marked = { ...this.props.selected };
 
+      console.log('render');
+      console.log ('=========================This.props.selected:\n',JSON.stringify(this.props.selected))
+      console.log('=========================This.props.calendar:\n', JSON.stringify(this.props.calendars));
     return (
       <View>
         <View style={{ height: 150, backgroundColor: 'transparent', justifyContent: 'center' }}>
@@ -128,10 +128,10 @@ class CalendarRender extends React.Component {
               this.showDialog(day.dateString);
             }}
             onDayLongPress={day => {
-              // this.pickDate(day.dateString);
-              console.log(this.state);
+              // console.log(this.state);
             }}
-            markedDates={this.props.selected}
+            
+            markedDates={marked}
             // '2019-10-20': { textColor: 'green' },
             // '2019-10-22': { startingDay: true, color: 'green' },
             // '2019-10-23': { selected: true, endingDay: true, color: 'green', textColor: 'gray' },
@@ -170,15 +170,24 @@ class CalendarRender extends React.Component {
           {/* <Dialog.Description>
             Add event to calendar
           </Dialog.Description> */}
-          <Dialog.Input>{this.dayEventTitle}</Dialog.Input>
-          <Dialog.Input>{this.dayEventText}</Dialog.Input>
+          {console.log('dayEvents: ', JSON.stringify(this.state.dayEvents))}
+          {!!this.state.dayEvents &&
+            this.state.dayEvents.map((el,index) => {
+              console.log('draw');
+              return (
+                //
+                <CalendarElement key={index} title={el.title} text={el.text} id={el.id} handleDelete={this.handleDelete} />
+              );
+            })}
+
+          {/* <Dialog.Input>{this.state.dayEventTitle}</Dialog.Input>
+          <Dialog.Input>{this.state.dayEventText}</Dialog.Input> */}
           {/* {this.props.title.map(el => (
             <Dialog.Input>{el}</Dialog.Input>
           ))}
           {this.props.text.map(el => (
             <Dialog.Input>{el}</Dialog.Input>
           ))} */}
-
           {/* <Dialog.Input>{this.state.text}</Dialog.Input> */}
           <Dialog.Input placeholder="Add title..." onChangeText={title => this.onChangeTitle(title)}></Dialog.Input>
           <Dialog.Input placeholder="Add text..." onChangeText={text => this.onChangeText(text)}></Dialog.Input>
@@ -206,7 +215,6 @@ class CalendarRender extends React.Component {
               }}
             />
           )}
-
           <Dialog.Button
             label="Delete"
             onPress={this.handleDelete}
