@@ -46,7 +46,7 @@ class CalendarRender extends React.Component {
     console.log('current date', day);
     
     const dayEvents = this.props.calendars[day];
-    console.log('before: ',JSON.stringify(dayEvents))
+    console.log('===================================before:\n ',JSON.stringify(dayEvents))
     this.setState({
       dialogVisible: true,
       dayEvents

@@ -7,6 +7,8 @@ import {
 } from '../actionNames/calendarActionNames';
 
 export const getEvents = (cookies) => async (dispatch) => {
+  console.log('===============================================start get\n');
+  
   try {
     const response = await fetch('http://134.209.82.36:3000/api/family/calendar', {
       method: 'GET',
@@ -69,6 +71,8 @@ export const addEvent = (cookies, event) => async (dispatch) => {
 };
 
 export const deleteEvent = (cookies, id) => async (dispatch) => {
+  console.log('================================================start deleted\n');
+  
   try {
     const response = await fetch('http://134.209.82.36:3000/api/user/calendar', {
       method: 'DELETE',
