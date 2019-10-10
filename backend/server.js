@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const path = require('path');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
+
 const client = redis.createClient();
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
@@ -81,6 +82,7 @@ passport.use(
 passport.use(db.User.createStrategy());
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+  req.session.save();
   res.redirect(`https://auth.expo.io/@yok558/family-hub?cookies=${encodeURI(res.req.cookies['connect.sid'])}`);
 });
 passport.serializeUser(serializeUser);
