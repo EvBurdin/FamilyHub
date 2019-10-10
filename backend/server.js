@@ -67,8 +67,8 @@ passport.use(
       // User.findOrCreate(profile, accessToken, refreshToken, (err, user) => done(err, user));
       db.User.findOrCreate({
         defaults: {
-          first_name: profile.name.givenName,
-          last_name: profile.name.familyName,
+          firstName: profile.name.givenName,
+          lastName: profile.name.familyName,
           photo: profile.photos[0].value,
         },
         where: { username: profile.emails[0].value },
