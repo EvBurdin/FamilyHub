@@ -82,7 +82,7 @@ passport.use(
 passport.use(db.User.createStrategy());
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-  req.session.save((e) => res.redirect(`https://auth.expo.io/@yok558/family-hub?cookies=${encodeURI(res.req.cookies['connect.sid'])}`));
+  req.session.save((e) => res.redirect(`https://auth.expo.io/@yok558/family-hub?cookies=${encodeURI(req.cookies['connect.sid'])}`));
 });
 passport.serializeUser(serializeUser);
 
