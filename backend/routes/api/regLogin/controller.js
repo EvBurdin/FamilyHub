@@ -51,4 +51,10 @@ module.exports = {
     console.log(chalk.green(JSON.stringify(req.cookies)));
     next();
   },
+  sessionLoger(req, res, next) {
+    console.log(chalk.blue(JSON.stringify(req.session)));
+    req.session.regenerate(e=>{});
+    console.log(chalk.red(JSON.stringify(req.session)));
+    next();
+  },
 };
