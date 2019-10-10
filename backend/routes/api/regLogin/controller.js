@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const { User } = require('../../../models/Index');
 
 function dismissProtectedFields(user) {
@@ -45,5 +46,9 @@ module.exports = {
     req.logout();
     req.session.destroy();
     res.send('false');
+  },
+  cookieLoger(req, res, next) {
+    console.log(chalk.green(JSON.stringify(req.cookies)));
+    next();
   },
 };
