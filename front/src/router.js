@@ -1,4 +1,5 @@
 import { createSwitchNavigator } from 'react-navigation';
+import React from 'react';
 import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer';
 import {
  View, StyleSheet, ScrollView, Button, SafeAreaView, Dimensions 
@@ -7,22 +8,25 @@ import Main from './views/main';
 import showMap from './views/map';
 import Login from './views/login';
 import Logout from './views/logout';
-import AddNewZone from '';
+import AddNewZone from './views/AddNewZone';
 import FamilyCreateJoin from './views/familyCreateJoin';
 
-const drawerNavigator = createDrawerNavigator({
-  Main,
-  showMap,
-  AddNewZone,
-  Logout,
-});
-
 const CustomDrawerComponent = (props) => (
-  <ScrollView>
-    <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
-      <DrawerNavigatorItems {...props} />
-    </SafeAreaView>
+  <ScrollView style={{ marginTop: 30 }}>
+    <DrawerNavigatorItems {...props} />
   </ScrollView>
+);
+
+const drawerNavigator = createDrawerNavigator(
+  {
+    Main,
+    showMap,
+    AddNewZone,
+    Logout,
+  },
+  {
+    contentComponent: CustomDrawerComponent,
+  },
 );
 
 export default createSwitchNavigator(

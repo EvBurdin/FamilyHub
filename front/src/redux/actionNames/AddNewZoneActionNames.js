@@ -1,0 +1,2 @@
+export const GET_CHECK_ZONES = 'GET_CHECK_ZONES';
+export const ADD_CHECKPOINT = 'ADD_CHECKPOINT';

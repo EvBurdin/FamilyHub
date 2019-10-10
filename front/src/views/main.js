@@ -60,8 +60,11 @@ class Main extends React.Component {
   };
   render() {
     return (
-      <View>
-        <TEST />
+      <View style={{ zIndex: 2, width: '100%', height: '100%' }}>
+        <View style={{ position: 'absolute', zIndex: 1, width: 30, height: '100%' }}></View>
+        <View style={{ zIndex: 0, width: '100%', height: '100%' }}>
+          <TEST />
+        </View>
       </View>
     );
   }

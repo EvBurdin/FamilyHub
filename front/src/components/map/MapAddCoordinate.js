@@ -4,7 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { connect } from 'react-redux';
 import { pickCoordinate } from '../../redux/actions/mapActions';
 
-class MapRender extends React.Component {
+class MapAddCoordinate extends React.Component {
   state = {
     locations: '',
     UserMarker: {
@@ -20,31 +20,13 @@ class MapRender extends React.Component {
   render() {
     return (
       <View style={{ zIndex: 2, width: '100%', height: '100%' }}>
-        <View
-          style={{
-            marginTop: 700,
-            // backglroundColor:'red',
-            position: 'absolute',
-            zIndex: 1,
-            width: '100%',
-            height: 45,
-          }}
-        >
-          {!!this.state.UserMarker.latitude && (
-            <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.pickLocation()}>
-              <Text style={styles.loginText}>ОК</Text>
-            </TouchableOpacity>
-          )}
-        </View>
         <View style={{ zIndex: 0, width: '100%', height: '100%' }}>
           <MapView
             style={{ flex: 1 }}
             onPress={res => {
-              this.setState({
-                UserMarker: {
-                  latitude: res.nativeEvent.coordinate.latitude,
-                  longitude: res.nativeEvent.coordinate.longitude,
-                },
+              this.props.pickCoordinate({
+                latitude: res.nativeEvent.coordinate.latitude,
+                longitude: res.nativeEvent.coordinate.longitude,
               });
             }}
             initialRegion={{
@@ -54,11 +36,11 @@ class MapRender extends React.Component {
               longitudeDelta: 0.01,
             }}
           >
-            {!!this.state.UserMarker.latitude && (
+            {!!this.props.pickedCoordinate && (
               <Marker
                 coordinate={{
-                  latitude: this.state.UserMarker.latitude,
-                  longitude: this.state.UserMarker.longitude,
+                  latitude: this.props.pickedCoordinate.latitude,
+                  longitude: this.props.pickedCoordinate.longitude,
                 }}
               ></Marker>
             )}
@@ -71,7 +53,7 @@ class MapRender extends React.Component {
 
 function mapStateToProps(store) {
   return {
-    allLocations: store.Map.familyGPSLocation,
+    pickedCoordinate: store.Map.pickedCoordinate,
     cookies: store.User.cookies,
   };
 }
@@ -85,7 +67,7 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MapRender);
+)(MapAddCoordinate);
 
 const styles = StyleSheet.create({
   buttonContainer: {
