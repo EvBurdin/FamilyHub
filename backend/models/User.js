@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       fullName: {
         type: DataTypes.VIRTUAL,
         get() {
-          return `${this.getDataValue('first_name')} ${this.getDataValue('last_name')}`;
+          return `${this.getDataValue('firstName')} ${this.getDataValue('lastName')}`;
         },
       },
       photo: {

@@ -85,7 +85,7 @@ module.exports = {
         periodStep = 1000 * 60 * 60 * 24 * 365;
     }
     if (periodic) {
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 100; i++) {
         const dateStartPer = new Date(dateStart).getTime() + i * periodStep;
         const dateEndPer = new Date(dateEnd).getTime() + i * periodStep;
         await Calendar.create({
