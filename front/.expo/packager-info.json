@@ -3,8 +3,8 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://ii-4ta.yok558.front.exp.direct",
+  "packagerNgrokUrl": "https://packager.ii-4ta.yok558.front.exp.direct",
+  "ngrokPid": 30770,
   "webpackServerPort": null
 }

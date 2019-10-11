@@ -156,12 +156,13 @@ class CalendarRender extends React.Component {
               textDayFontSize: 16,
               textMonthFontSize: 16,
               textDayHeaderFontSize: 16,
+              overflow: 'hidden',
             }}
           />
         )}
 
         <Dialog.Container visible={this.state.dialogVisible} {...reactNativeModalProps}>
-          <Dialog.Title>Whats today?</Dialog.Title>
+          <Dialog.Title>What's today?</Dialog.Title>
           {/* <Dialog.Description>
             Add event to calendar
           </Dialog.Description> */}
@@ -190,6 +191,7 @@ class CalendarRender extends React.Component {
             <Dialog.Input>{el}</Dialog.Input>
           ))} */}
           {/* <Dialog.Input>{this.state.text}</Dialog.Input> */}
+          {/* <Dialog.Description>Add new event</Dialog.Description> */}
           <Dialog.Input placeholder="Add title..." onChangeText={title => this.onChangeTitle(title)}></Dialog.Input>
           <Dialog.Input placeholder="Add text..." onChangeText={text => this.onChangeText(text)}></Dialog.Input>
           {/* <Dialog.Button label="Cancel" onPress={this.handleCancel} /> */}
@@ -219,12 +221,12 @@ class CalendarRender extends React.Component {
           <Dialog.Button
             label="Cancel"
             onPress={this.handleDelete}
-            style={{ backgroundColor: '#DB514E', borderRadius: 5, color: 'white', width: 70 }}
+            style={{ backgroundColor: '#DB514E', borderRadius: 5, color: 'white', width: 80 }}
           />
           <Dialog.Button
             label="Ok"
             onPress={this.handleOk}
-            style={{ backgroundColor: '#82AF12', borderRadius: 5, color: 'white', marginLeft: 155, width: 70 }}
+            style={{ backgroundColor: '#82AF12', borderRadius: 5, color: 'white', marginLeft: 135, width: 80 }}
           />
         </Dialog.Container>
       </View>
