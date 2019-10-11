@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
+import { Button, Divider } from 'react-native-elements';
 import { deleteEvent } from '../../../redux/actions/calendarActions';
 
 class CalendarElement extends Component {
@@ -21,15 +23,21 @@ class CalendarElement extends Component {
     } = this.props;
     return (
       <View>
-        <Text>{title}</Text>
-        <Text>{text}</Text>
-        <Button
-          onPress={() => {
-            deleteElement(cookies, id);
-            handleDelete();
-          }}
-          title="Delete"
-         />
+        <Text style={{ fontWeight: 'bold' }}>{title}</Text>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          <Text>{text}</Text>
+          <Button
+            icon={<Icon name="trash-o" size={20} color="black" />}
+            // title="Button with icon component"
+            onPress={() => {
+              deleteElement(cookies, id);
+              handleDelete();
+            }}
+            type="clear"
+            // title="Delete"
+          />
+        </View>
+        <Divider style={{ backgroundColor: 'blue', marginBottom: 10 }} />
       </View>
     );
   }
