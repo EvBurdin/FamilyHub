@@ -130,7 +130,7 @@ module.exports = {
       FamilyId,
     } = req.body;
     const point = { type: 'Point', coordinates: [longitude, latitude] };
-    await Location.create({
+    const location = await Location.create({
       name,
       description,
       latitude,
@@ -140,7 +140,7 @@ module.exports = {
       UserId,
     });
 
-    res.json('Success');
+    res.json(location);
   },
   async deleteLocation(req, res) {
     const { id } = req.body;
