@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TouchableHighlight, ScrollView } from 'react-native';
-import { Button, CheckBox, Overlay, Input } from 'react-native-elements';
+import { StyleSheet, View, TouchableHighlight, ScrollView, Text } from 'react-native';
+import { Button, CheckBox, Overlay, Input} from 'react-native-elements';
 import { connect } from 'react-redux';
 import {
   showModal,
@@ -14,9 +14,13 @@ import {
 
 class ToDoList extends Component {
   state = {};
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
 
   componentDidMount() {
     this.familyToDoFetch();
+    this.interval = setInterval(this.familyToDoFetch, 15000);
   }
 
   // componentDidUpdate(prevProps) {
@@ -25,9 +29,10 @@ class ToDoList extends Component {
   //   }
   // }
 
-  async familyToDoFetch() {
+  familyToDoFetch = async () => {
+    console.log('update todo');
     const somePromise = await this.props.getFamilyToDo(this.props.cookies);
-  }
+  };
 
   render() {
     return (
@@ -40,7 +45,7 @@ class ToDoList extends Component {
                   <CheckBox
                     key={item.id}
                     title={item.goal}
-                    checked={item.active}
+                    checked={!item.active}
                     onIconPress={() => {
                       this.props.checkTask(
                         item.goal,
@@ -67,13 +72,21 @@ class ToDoList extends Component {
         </TouchableHighlight>
         <View>
           <Overlay
-            height="auto"
+            height="30%"
             isVisible={this.props.isVisibleNewTask}
             onBackdropPress={() => this.props.showModal(false, -1)}
           >
-            <View>
-              <Input autoFocus onChangeText={text => this.props.editInput(text)} value={this.props.newTaskTitle} />
+            <View style={{ flex: 2, justifyContent: 'space-between' }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 18 }}> New task:</Text>
+              <Input
+                style={{ marginBottom: 100 }}
+                autoFocus
+                onChangeText={text => this.props.editInput(text)}
+                value={this.props.newTaskTitle}
+              />
+              <View />
               <Button
+                style={styles.button}
                 onPress={() =>
                   this.props.saveTaskNew(
                     this.props.list.length,
@@ -128,6 +141,9 @@ export default connect(
 )(ToDoList);
 
 const styles = StyleSheet.create({
+  button : {
+    marginTop: 100,
+  },
   container: {
     flex: 1,
     paddingTop: 15,

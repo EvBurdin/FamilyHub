@@ -91,7 +91,7 @@ export default function (state = initialState, action) {
         return {
           ...state,
           // list: [...state.list, { title: state.newTaskTitle, active: false }],
-          list: [{ goal: action.goal, active: false }, ...state.list],
+          list: [{ goal: action.goal, active: true }, ...state.list],
           newTaskTitle: '',
           editTaskID: -1,
           currentCheck: undefined,
@@ -104,7 +104,7 @@ export default function (state = initialState, action) {
         // adding new task (first task) - empty array && not editing task ID
         return {
           ...state,
-          list: [{ goal: state.newTaskTitle, active: false }],
+          list: [{ goal: state.newTaskTitle, active: true }],
           newTaskTitle: '',
           editTaskID: -1,
           currentCheck: undefined,
