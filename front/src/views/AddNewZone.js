@@ -15,12 +15,14 @@ import { ToastAndroid } from 'react-native';
 import { addNewCheckpoint, getAllCheckpoints, dellCheckpoints } from '../redux/actions/AddNewZoneActions';
 import { pickCoordinate } from '../redux/actions/mapActions';
 import ModalMap from '../components/map/MapAddCoordinate';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class AddNewZone extends Component {
   state = {
     isVisible: false,
     name: '',
     description: '',
+    checked: false,
   };
 
   componentDidMount() {
@@ -68,30 +70,29 @@ class AddNewZone extends Component {
                     flexDirection: 'row',
                     justifyContent: 'flex-start',
                     alignItems: 'center',
+                    marginBottom: 30,
                   }}
                 >
-                  {/* <ListItem key={'sdfsdfsd'} title={'zczxcxzczxcxzc'} subtitle={'el.description'} bottomDivider />
                   <ListItem
-                    key={index + el.name + el.description + 1}
+                    style={{ height: 45, width: '100%' }}
+                    key={index + el.name + el.description + 373}
+                    leftAvatar={{
+                      source: {
+                        uri:
+                          'https://lh3.googleusercontent.com/-dXKAHKBy5ag/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcS5nw-EOVdSwbDA_6fEbBmQgETjQ/photo.jpg',
+                      },
+                    }}
                     title={el.name}
                     subtitle={el.description}
                     bottomDivider
-                  /> */}
-                  <TouchableOpacity
-                    key={index + el.name + el.description}
-                    style={[styles.buttonContainer, styles.loginButton]}
-                    onPress={() => this.pickLocation()}
-                  >
-                    <Text style={styles.loginTextH}>{el.name}</Text>
-                    <Text style={styles.loginText}>{el.description}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    key={index + el.name + el.description + 1}
-                    style={[styles.delButtonContainer]}
-                    onPress={() => this.props.dellCheckpoints(this.props.cookies, el.id, this.props.checkpoints)}
-                  >
-                    <Text style={styles.delText}>X</Text>
-                  </TouchableOpacity>
+                    chevron={{
+                      name: 'trash',
+                      type: 'evilicon',
+                      color: '#A6A6A6',
+                      size: 30,
+                      onPress: () => this.props.dellCheckpoints(this.props.cookies, el.id, this.props.checkpoints),
+                    }}
+                  />
                 </View>
               );
             })}
