@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TouchableHighlight, ScrollView } from 'react-native';
+import { StyleSheet, View, TouchableHighlight, ScrollView, Text } from 'react-native';
 import { Button, CheckBox, Overlay, Input } from 'react-native-elements';
 import { connect } from 'react-redux';
 import {
@@ -14,9 +14,13 @@ import {
 
 class ToDoList extends Component {
   state = {};
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
 
   componentDidMount() {
     this.familyToDoFetch();
+    this.interval = setInterval(this.familyToDoFetch, 15000);
   }
 
   // componentDidUpdate(prevProps) {
@@ -25,13 +29,24 @@ class ToDoList extends Component {
   //   }
   // }
 
-  async familyToDoFetch() {
+  familyToDoFetch = async () => {
+    console.log('update todo');
     const somePromise = await this.props.getFamilyToDo(this.props.cookies);
-  }
+  };
 
   render() {
     return (
       <View style={{ flex: 1, flexDirection: 'column', marginTop: 30 }}>
+        <View>
+          <View style={{ height: 150, backgroundColor: 'transparent', justifyContent: 'center' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ color: 'white', fontSize: 40, backgroundColor: 'black', borderRadius: 5 }}>Family</Text>
+            </View>
+            <View style={{ marginTop: -2, marginLeft: 70 }}>
+              <Text style={{ color: 'black', fontSize: 40, backgroundColor: '#FFFF33', borderRadius: 5 }}>ToDo</Text>
+            </View>
+          </View>
+        </View>
         <TouchableHighlight underlayColor="white">
           <ScrollView>
             {this.props.list
@@ -40,7 +55,7 @@ class ToDoList extends Component {
                   <CheckBox
                     key={item.id}
                     title={item.goal}
-                    checked={item.active}
+                    checked={!item.active}
                     onIconPress={() => {
                       this.props.checkTask(
                         item.goal,
@@ -67,13 +82,21 @@ class ToDoList extends Component {
         </TouchableHighlight>
         <View>
           <Overlay
-            height="auto"
+            height="30%"
             isVisible={this.props.isVisibleNewTask}
             onBackdropPress={() => this.props.showModal(false, -1)}
           >
-            <View>
-              <Input autoFocus onChangeText={text => this.props.editInput(text)} value={this.props.newTaskTitle} />
+            <View style={{ flex: 2, justifyContent: 'space-between' }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 18 }}> New task:</Text>
+              <Input
+                style={{ marginBottom: 100 }}
+                autoFocus
+                onChangeText={text => this.props.editInput(text)}
+                value={this.props.newTaskTitle}
+              />
+              <View />
               <Button
+                style={styles.button}
                 onPress={() =>
                   this.props.saveTaskNew(
                     this.props.list.length,
@@ -128,6 +151,9 @@ export default connect(
 )(ToDoList);
 
 const styles = StyleSheet.create({
+  button: {
+    marginTop: 100,
+  },
   container: {
     flex: 1,
     paddingTop: 15,
