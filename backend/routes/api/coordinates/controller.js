@@ -112,11 +112,16 @@ module.exports = {
     const familys = await user.getFamilys({ attributes: ['id'], joinTableAttributes: [] });
     const familysId = familys.map((el) => el.id);
 
-    const locations = await Location.findAll({ where: { FamilyId: { [Op.in]: familysId } } });
+    const locations = await Location.findAll({
+      where: { FamilyId: { [Op.in]: familysId } },
+      include: [{ model: User.scope('clear') }],
+    });
 
     res.json(locations);
   },
   async setLocation(req, res) {
+    const { id: UserId } = req.user;
+    console.log(UserId);
     const {
       name, //
       description,
@@ -132,6 +137,7 @@ module.exports = {
       longitude,
       point,
       FamilyId,
+      UserId,
     });
 
     res.json('Success');

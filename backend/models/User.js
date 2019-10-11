@@ -56,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Calendar, { foreignKey: 'author' });
     User.hasMany(models.Event, { foreignKey: 'user' });
     User.hasMany(models.Event, { foreignKey: 'toWhom' });
+    User.hasMany(models.Location);
     User.belongsToMany(models.Family, {
       through: 'UsersFamily',
       as: 'Familys',

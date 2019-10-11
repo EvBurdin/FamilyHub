@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Location.associate = (models) => {
     Location.belongsTo(models.Family);
+    Location.belongsTo(models.User);
   };
   return Location;
 };
