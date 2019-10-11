@@ -160,7 +160,7 @@ class AddNewZone extends Component {
             </View>
           </Overlay>
         </View>
-        <View style={{ position: 'absolute' }}>
+        <View style={{ alignSelf: 'flex-end', height: 20, width: '100%', paddingBottom: 100 }}>
           <TouchableOpacity style={styles.addButton} onPress={() => this.open()}>
             <Text
               style={
@@ -257,7 +257,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#F96F6F',
     borderWidth: 3,
-    // backgroundColor: 'red',
   },
   loginButton: {
     backgroundColor: '#00b5ec',
@@ -270,7 +269,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F96F6F',
     position: 'absolute',
     zIndex: 2,
-    marginTop: 800,
+    marginTop: 0,
     marginLeft: 330,
     height: 50,
     width: 50,
