@@ -1,10 +1,9 @@
-import {
- USER_LOGIN, USER_LOGOUT, COOKIES_SAVE, USER_ADD_FAMILY 
-} from '../actionNames/userActionNames';
+import { USER_LOGIN, USER_LOGOUT, COOKIES_SAVE, USER_ADD_FAMILY, GET_FAMILY } from '../actionNames/userActionNames';
 
 const initState = {
   user: '',
   cookies: '',
+  myFamily: '',
 };
 
 export default function reducer(state = initState, action) {
@@ -17,6 +16,8 @@ export default function reducer(state = initState, action) {
       return { ...state, cookies: action.payload };
     case USER_ADD_FAMILY:
       return { ...state, user: action.payload };
+    case GET_FAMILY:
+      return { ...state, myFamily: action.payload };
     default:
       return state;
   }

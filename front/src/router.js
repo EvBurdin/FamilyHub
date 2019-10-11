@@ -10,6 +10,8 @@ import Login from './views/login';
 import Logout from './views/logout';
 import AddNewZone from './views/AddNewZone';
 import FamilyCreateJoin from './views/familyCreateJoin';
+import Family from './views/family';
+
 
 const CustomDrawerComponent = (props) => (
   <ScrollView style={{ marginTop: 30 }}>
@@ -23,6 +25,7 @@ const drawerNavigator = createDrawerNavigator(
     showMap,
     AddNewZone,
     Logout,
+    Family,
   },
   {
     contentComponent: CustomDrawerComponent,

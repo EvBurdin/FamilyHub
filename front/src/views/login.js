@@ -234,7 +234,8 @@ const styles = StyleSheet.create({
   inputIcon: {
     width: 30,
     height: 30,
-    marginLeft: 15,
+    marginLeft: 10,
+    marginRight: 10,
     justifyContent: 'center',
   },
   buttonContainer: {
