@@ -25,12 +25,7 @@ class MapRender extends React.Component {
       <MapView
         style={{ flex: 1 }}
         onPress={res => {
-          this.setState({
-            UserMarker: {
-              latitude: res.nativeEvent.coordinate.latitude,
-              longitude: res.nativeEvent.coordinate.longitude,
-            },
-          });
+          this.locationsFetch();
         }}
         initialRegion={{
           latitude: 55.708906,
