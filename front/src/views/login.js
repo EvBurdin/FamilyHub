@@ -58,7 +58,7 @@ class LoginView extends Component {
             20,
             200,
           );
-          this.props.navigation.navigate('Calendar');
+          this.props.navigation.navigate('Main');
         } else {
           this.props.navigation.navigate('FamilyCreateJoin');
         }

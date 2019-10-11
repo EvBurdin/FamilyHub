@@ -238,7 +238,7 @@ function mapStateToProps(store) {
   return {
     selected: store.Calendar.selected,
     cookies: store.User.cookies,
-    familyId: store.User.user.Families[0].id,
+    familyId: store.User.user && store.User.user.Families[0].id,
     calendars: store.Calendar.calendars,
   };
 }

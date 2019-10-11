@@ -18,6 +18,9 @@ import ModalMap from '../components/map/MapAddCoordinate';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 class AddNewZone extends Component {
+  static navigationOptions = {
+    title: 'Checkpoint',
+  };
   state = {
     isVisible: false,
     name: '',
@@ -61,6 +64,18 @@ class AddNewZone extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.container}>
+          <View>
+            <View style={{ height: 150, backgroundColor: 'transparent', justifyContent: 'center' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: 'white', fontSize: 40, backgroundColor: 'black', borderRadius: 5 }}>Family</Text>
+              </View>
+              <View style={{ marginTop: -2, marginLeft: 70 }}>
+                <Text style={{ color: 'black', fontSize: 40, backgroundColor: '#FFFF33', borderRadius: 5 }}>
+                  Checkpoint
+                </Text>
+              </View>
+            </View>
+          </View>
           {!!this.props.checkpoints &&
             this.props.checkpoints.map((el, index) => {
               return (
@@ -104,42 +119,44 @@ class AddNewZone extends Component {
             // width="auto"
             // height="auto"
           >
-            <View style={{ height: 410 }}>
-              <ModalMap></ModalMap>
-            </View>
-            <View style={styles.modalContainer}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Enter Checkpoint Name"
-                  keyboardAppearance="light"
-                  autoFocus={false}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  returnKeyType="next"
-                  underlineColorAndroid="transparent"
-                  onChangeText={name => this.setState({ name })}
-                />
+            <View>
+              <View style={{ height: 410 }}>
+                <ModalMap></ModalMap>
               </View>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Enter Checkpoint Description"
-                  keyboardAppearance="light"
-                  autoFocus={false}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  returnKeyType="next"
-                  underlineColorAndroid="transparent"
-                  onChangeText={description => this.setState({ description })}
-                />
+              <View style={styles.modalContainer}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.inputs}
+                    placeholder="Enter Checkpoint Name"
+                    keyboardAppearance="light"
+                    autoFocus={false}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    returnKeyType="next"
+                    underlineColorAndroid="transparent"
+                    onChangeText={name => this.setState({ name })}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.inputs}
+                    placeholder="Enter Checkpoint Description"
+                    keyboardAppearance="light"
+                    autoFocus={false}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    returnKeyType="next"
+                    underlineColorAndroid="transparent"
+                    onChangeText={description => this.setState({ description })}
+                  />
+                </View>
+                <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.save()}>
+                  <Text style={styles.loginText}>Save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.close()}>
+                  <Text style={styles.loginText}>Cancel</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.save()}>
-                <Text style={styles.loginText}>Save</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.close()}>
-                <Text style={styles.loginText}>Cancel</Text>
-              </TouchableOpacity>
             </View>
           </Overlay>
         </View>
