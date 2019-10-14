@@ -116,7 +116,7 @@ class FamilyCreateJoin extends Component {
           />
         </View>
         <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.familyJoin()}>
-          <Text style={styles.loginText}>Create</Text>
+          <Text style={styles.loginText}>Join</Text>
         </TouchableOpacity>
       </View>
     );

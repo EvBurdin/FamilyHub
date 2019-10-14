@@ -44,7 +44,7 @@ class MapRender extends React.Component {
                   longitude: +el.longitude,
                 }}
                 title={el.user}
-                description="хз кто это"
+                description="DevTeam"
               />
             );
           })}

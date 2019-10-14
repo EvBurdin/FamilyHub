@@ -25,8 +25,10 @@ export const addNewCheckpoint = (data) => async (dispatch) => {
       }),
     });
     const myJson = await response.json();
+    console.log(myJson);
+    myJson.User = data.User;
     // console.log(myJson);
-    dispatch({ type: ADD_CHECKPOINT, payload: data });
+    dispatch({ type: ADD_CHECKPOINT, payload: myJson });
   } catch (e) {
     console.log(e);
   }
@@ -53,13 +55,13 @@ export const getAllCheckpoints = (cookies) => async (dispatch) => {
 };
 
 export const dellCheckpoints = (cookies, id, arr) => async (dispatch) => {
-  console.log(arr.length);
+  console.log(id);
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].id === id) {
       arr.splice(i, 1);
     }
   }
-  console.log(arr.length);
+  // console.log(arr.length);
   try {
     const response = await fetch('http://134.209.82.36:3000/api/coordinates/location', {
       method: 'DELETE',
@@ -73,7 +75,7 @@ export const dellCheckpoints = (cookies, id, arr) => async (dispatch) => {
       body: JSON.stringify({ id }),
     });
     const myJson = await response.json();
-    console.log(myJson);
+    // console.log(myJson);
     dispatch({ type: GET_ALL_CHECKPOINTS, payload: arr });
   } catch (e) {
     console.log(e);

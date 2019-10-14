@@ -6,6 +6,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import { Notifications } from 'expo';
 import { ListItem } from 'react-native-elements';
+import { getFamily } from '../redux/actions/userActions';
 const LOCATION_TASK_NAME = 'background-location-task';
 let thisCookies = '';
 
@@ -25,6 +26,7 @@ class Main extends React.Component {
     this.createChanels();
     thisCookies = this.props.cookies;
     this.runGeoLocation();
+    this.props.getFamily(this.props.cookies);
   }
   createChanels = () => {
     Notifications.createChannelAndroidAsync('EVENT', {
@@ -54,38 +56,15 @@ class Main extends React.Component {
     const statusN = await Permissions.askAsync(Permissions.NOTIFICATIONS);
     if (true) {
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-        accuracy: Location.Accuracy.Highest,
-        timeInterval: 180000,
-        distanceInterval: 1,
+        accuracy: Location.Accuracy.BestForNavigation,
+        timeInterval: 1000,
+        distanceInterval: 0,
       });
     } else {
       return console.log('false');
     }
   };
   render() {
-    const list = [
-      {
-        name: 'Юрий',
-        avatar_url: 'https://lh3.googleusercontent.com/a-/AAuE7mBPI0szTXncL_D6YLKNvUv8A-vofgJJ1gKZBTXmOoQ',
-        subtitle: 'Копыстко',
-      },
-      {
-        name: 'Евгений',
-        avatar_url:
-          'https://lh3.googleusercontent.com/-dXKAHKBy5ag/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcS5nw-EOVdSwbDA_6fEbBmQgETjQ/photo.jpg',
-        subtitle: 'Бурдин',
-      },
-      {
-        name: 'Петр',
-        avatar_url: 'https://lh3.googleusercontent.com/a-/AAuE7mAtmKoekw9sr1SFuohHf0KkFjXvwIAESoovaTai1Q',
-        subtitle: 'Котельников',
-      },
-      {
-        name: 'Алексей',
-        avatar_url: 'https://lh3.googleusercontent.com/a-/AAuE7mDPvfqrYrVLN5rKD6IbzaSJkRensbm9_628mOqS',
-        subtitle: 'Окунев',
-      },
-    ];
     return (
       <ScrollView>
         <View
@@ -104,15 +83,31 @@ class Main extends React.Component {
             source={require('../img/family.jpg')}
           />
           <Text style={styles.stretch}>My family: DevTeam</Text>
-          {list.map((l, i) => (
-            <ListItem
-              key={i}
-              leftAvatar={{ source: { uri: l.avatar_url } }}
-              title={l.name}
-              subtitle={l.subtitle}
-              bottomDivider
-            />
-          ))}
+          {!!this.props.Families &&
+            this.props.Families.map((el, index) => (
+              <View
+                key={index + el.firstName + el.lastName}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                  marginBottom: 30,
+                }}
+              >
+                <ListItem
+                  style={{ height: 45, width: '100%' }}
+                  key={index + el.firstName + el.lastName + 373}
+                  leftAvatar={{
+                    source: {
+                      uri: el.photo,
+                    },
+                  }}
+                  title={el.firstName}
+                  subtitle={el.lastName}
+                  bottomDivider
+                />
+              </View>
+            ))}
         </View>
       </ScrollView>
     );
@@ -123,11 +118,12 @@ function mapStateToProps(store) {
   return {
     // isUserLogin: !!store.userReducer.user,
     cookies: store.User.cookies,
+    Families: store.User.family,
   };
 }
 function mapDispatchToProps(dispatch) {
   return {
-    // userLogin: (user, cookie) => dispatch(userLogin(user, cookie)),
+    getFamily: cookie => dispatch(getFamily(cookie)),
   };
 }
 export default connect(

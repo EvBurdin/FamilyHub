@@ -143,7 +143,7 @@ class LoginView extends Component {
             </Text>
           </View>
         </View>
-        <View style={styles.inputContainer}>
+        {/* <View style={styles.inputContainer}>
           <Image
             style={styles.inputIcon}
             source={{
@@ -188,7 +188,7 @@ class LoginView extends Component {
           onPress={() => this.onClickListener('login')}
         >
           <Text style={styles.loginText}>Login</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.signInWithGoogle()}>
           <Image
@@ -200,7 +200,7 @@ class LoginView extends Component {
           <Text style={styles.loginText}>Sign in with Google</Text>
         </TouchableOpacity>
 
-        <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('restore_password')}>
+        {/* <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('restore_password')}>
           <Text>Forgot your password?</Text>
         </TouchableHighlight>
 
@@ -211,7 +211,7 @@ class LoginView extends Component {
           }}
         >
           <Text>Register</Text>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
       </View>
     );
   }
@@ -264,7 +264,8 @@ const styles = StyleSheet.create({
   inputIcon: {
     width: 30,
     height: 30,
-    marginLeft: 15,
+    marginLeft: 5,
+    marginRight: 10,
     justifyContent: 'center',
   },
   buttonContainer: {

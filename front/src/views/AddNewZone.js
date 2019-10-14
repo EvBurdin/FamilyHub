@@ -45,6 +45,8 @@ class AddNewZone extends Component {
     this.props.pickCoordinate('');
   };
   save = () => {
+    console.log(this.props.checkpoints);
+
     if (this.state.name.length === 0) {
       ToastAndroid.showWithGravityAndOffset('Enter Checkpoint Name !', ToastAndroid.LONG, ToastAndroid.TOP, 20, 200);
     } else {
@@ -55,6 +57,7 @@ class AddNewZone extends Component {
         name: this.state.name,
         description: this.state.description,
         familyId: this.props.user.Families[0].id,
+        User: this.props.user,
       });
       this.close();
     }
@@ -64,7 +67,7 @@ class AddNewZone extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.container}>
-          <View>
+          <View onPress={() => this.props.getAllCheckpoints(this.props.cookies)}>
             <View style={{ height: 150, backgroundColor: 'transparent', justifyContent: 'center' }}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: 'white', fontSize: 40, backgroundColor: 'black', borderRadius: 5 }}>Family</Text>
@@ -93,8 +96,7 @@ class AddNewZone extends Component {
                     key={index + el.name + el.description + 373}
                     leftAvatar={{
                       source: {
-                        uri:
-                          'https://lh3.googleusercontent.com/-dXKAHKBy5ag/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcS5nw-EOVdSwbDA_6fEbBmQgETjQ/photo.jpg',
+                        uri: el.User && el.User.photo,
                       },
                     }}
                     title={el.name}
