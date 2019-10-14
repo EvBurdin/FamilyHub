@@ -13,8 +13,8 @@
 **Скриншоты:**
 ----------
 *профиль семьи:*  
-<img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_16-57-58.jpg?raw=true" height="500px">
-<img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-03-15.jpg?raw=true" height="500px">
+<img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_16-57-58.jpg?raw=true" height="600px">
+<img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-03-15.jpg?raw=true" height="600px">
 *Меню:*
 ![](https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-03-15.jpg?raw=true)
 
