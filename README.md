@@ -13,7 +13,7 @@
 **Скриншоты:**
 ----------
 *профиль семьи:*  
-![](https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_16-57-58.jpg?raw=true|height=300)
+![](https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_16-57-58.jpg?raw=true){:height="50%"}
 
 *Меню:*
 ![](https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-03-15.jpg?raw=true)
