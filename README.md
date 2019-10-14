@@ -15,14 +15,7 @@
 *профиль семьи >> Меню >> Чекпоинты*  
 <img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_16-57-58.jpg?raw=true" height="700px" align="left"> <img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-03-15.jpg?raw=true" height="700px" align="right">  
 <img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-03-45.jpg?raw=true" height="700px"  align="left"><img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-04-09.jpg?raw=true" height="700px" align="right">
-*Меню:*
-![](https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-03-15.jpg?raw=true)
-
-*Чекпоинты:*
-![](https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-03-45.jpg?raw=true)
-
-*PUSH-уведомления:*
-![](https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-04-09.jpg?raw=true)
+<img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-05-12.jpg?raw=true" height="700px"  align="left"><img src="https://github.com/EvBurdin/FamilyHub/blob/master/front/src/img/photo_2019-10-14_17-04-16.jpg?raw=true" height="700px" align="right">
 
 
 **Авторы:**
